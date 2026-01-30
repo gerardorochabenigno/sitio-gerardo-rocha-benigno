@@ -1,0 +1,6 @@
+---
+title: "Proyectos"
+listing:
+  contents: posts
+  type: grid
+---

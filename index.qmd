@@ -2,7 +2,7 @@
 title: "Gerardo Rocha Benigno"
 image: foto.jpeg
 about:
-  template: jolla
+  template: trestles
   image-shape: round
   links:
     - icon: linkedin
@@ -13,11 +13,17 @@ about:
       href: mailto:g.rochabenigno@gmail.com
 ---
 
-Líder de Especialidad en Banco de México, espécialista en crédito al consumo y pagos con tarjeta en TPV.
+## Acerca de mí
+
+Economista con más de 9 años de experiencia en inclusión y transparencia de servicios financieros, crédito al consumo y sistemas de pago al menudeo. Actualmente me desempeño como Líder de Especialidad de Estudios de Sistemas de Pago e Infraestructuras de Mercado en Banco de México.  
+
+A lo largo de mi carrera he trabajado con grandes volúmenes de información para generar estadísticas, crear indicadores y evaluar el impacto de políticas públicas en crédito y sistemas de pago en México.
+
+En mis tiempos libres disfruto pasar tiempo con mi familia, hacer ejercicio, jugar videojuegos y seguir al Toluca.
 
 ## Áreas de interés
-- Análisis de sistemas de pago
-- Econometría y series de tiempo
-- Aprendizaje automático 
-- Probabilidad y estadísticca
-- Machine learning probabilístico
+- Crédito bancario comercial, al consumo y a la vivienda
+- Sistemas de pago al menudeo: tarjetas y transferencias de bajo valor
+- Econometría aplicada y análisis de series de tiempo
+- Aprendizaje automático y modelos probabilísticos
+- Inferencia bayesiana y estadística
