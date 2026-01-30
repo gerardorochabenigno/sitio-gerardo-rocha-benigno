@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Lead Economist | Banco de México\nEmail: g.rochabenigno@gmail.com | LinkedIn"
+  },
+  {
+    "objectID": "cv.html#gerardo-rocha-benigno",
+    "href": "cv.html#gerardo-rocha-benigno",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Lead Economist | Banco de México\nEmail: g.rochabenigno@gmail.com | LinkedIn"
+  },
+  {
+    "objectID": "cv.html#experiencia-profesional",
+    "href": "cv.html#experiencia-profesional",
+    "title": "Curriculum Vitae",
+    "section": "Experiencia Profesional",
+    "text": "Experiencia Profesional\nLíder de especialidad en estudios de sistemas de pago e infraestructura de mercado | Banco de México | 2025 - Presente\n\nLiderazgo de equipo de 2 especialistas en análisis de sistemas de pago\nAnálisis de más de 30 millones de operaciones diarias (tarjetas, CoDi, Dimo)\nDesarrollo de modelos econométricos para evaluación regulatoria\nImplementación de modelos de machine learning para predicción y detección de anomalías\n\nInvestigador Financiero de Transparencia de Servicios Financieros | Banco de México | 2016 - 2025\n\nResponsabilidad 1\nResponsabilidad 2"
+  },
+  {
+    "objectID": "cv.html#educación",
+    "href": "cv.html#educación",
+    "title": "Curriculum Vitae",
+    "section": "Educación",
+    "text": "Educación\nMaestría en Ciencia de Datos | ITAM | 2023 - 2026 (esperado)\n\nTesis: Machine learning probabilístico para análisis de series de tiempo\n\nLicenciatura en Economía | UNAM | 2010 - 2015\n\nPromedio: 9.34/10.0"
+  },
+  {
+    "objectID": "cv.html#habilidades-técnicas",
+    "href": "cv.html#habilidades-técnicas",
+    "title": "Curriculum Vitae",
+    "section": "Habilidades Técnicas",
+    "text": "Habilidades Técnicas\nProgramación: Python, R\nEconometría: ARIMA, VAR, Diferencias-en-diferencias, Heckman\nMachine Learning: PyTorch, Pyro, scikit-learn\nAnálisis Espacial: GeoPandas, análisis de redes"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "Líder de Especialidad en Banco de México, espécialista en crédito al consumo y pagos con tarjeta en TPV."
+  },
+  {
+    "objectID": "index.html#áreas-de-interés",
+    "href": "index.html#áreas-de-interés",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Áreas de interés",
+    "text": "Áreas de interés\n\nAnálisis de sistemas de pago\nEconometría y series de tiempo\nAprendizaje automático\nProbabilidad y estadísticca\nMachine learning probabilístico"
+  }
+]
