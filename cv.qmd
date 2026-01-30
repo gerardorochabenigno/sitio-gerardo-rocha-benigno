@@ -1,0 +1,47 @@
+---
+title: "Curriculum Vitae"
+---
+
+## Gerardo Rocha Benigno
+Lead Economist | Banco de México  
+Email: g.rochabenigno@gmail.com | [LinkedIn](https://linkedin.com/in/gerardo-rocha-benigno)
+
+---
+
+## Experiencia Profesional
+
+**Líder de especialidad en estudios de sistemas de pago e infraestructura de mercado** | Banco de México | 2025 - Presente
+
+- Liderazgo de equipo de 2 especialistas en análisis de sistemas de pago
+- Análisis de más de 30 millones de operaciones diarias (tarjetas, CoDi, Dimo)
+- Desarrollo de modelos econométricos para evaluación regulatoria
+- Implementación de modelos de machine learning para predicción y detección de anomalías
+
+**Investigador Financiero de Transparencia de Servicios Financieros** | Banco de México | 2016 - 2025
+
+- Responsabilidad 1
+- Responsabilidad 2
+
+---
+
+## Educación
+
+**Maestría en Ciencia de Datos** | ITAM | 2023 - 2026 (esperado)
+
+- Tesis: Machine learning probabilístico para análisis de series de tiempo
+
+**Licenciatura en Economía** | UNAM | 2010 - 2015
+
+- Promedio: 9.34/10.0
+
+---
+
+## Habilidades Técnicas
+
+**Programación:** Python, R  
+**Econometría:** ARIMA, VAR, Diferencias-en-diferencias, Heckman  
+**Machine Learning:** PyTorch, Pyro, scikit-learn  
+**Análisis Espacial:** GeoPandas, análisis de redes
+
+---
+

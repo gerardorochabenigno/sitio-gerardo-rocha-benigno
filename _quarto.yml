@@ -1,0 +1,18 @@
+project:
+  type: website
+
+website:
+  title: "Gerardo Rocha Benigno"
+  navbar:
+    left:
+      - text: "Inicio"
+        href: index.qmd
+      - text: "CV"
+        href: cv.qmd
+      - text: "Proyectos"
+        href: proyectos.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

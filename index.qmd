@@ -1,0 +1,23 @@
+---
+title: "Gerardo Rocha Benigno"
+image: foto.jpeg
+about:
+  template: jolla
+  image-shape: round
+  links:
+    - icon: linkedin
+      href: https://linkedin.com/in/gerardorochabenigno
+    - icon: github
+      href: https://github.com/gerardorochabenigno
+    - icon: envelope
+      href: mailto:g.rochabenigno@gmail.com
+---
+
+Líder de Especialidad en Banco de México, espécialista en crédito al consumo y pagos con tarjeta en TPV.
+
+## Áreas de interés
+- Análisis de sistemas de pago
+- Econometría y series de tiempo
+- Aprendizaje automático 
+- Probabilidad y estadísticca
+- Machine learning probabilístico
