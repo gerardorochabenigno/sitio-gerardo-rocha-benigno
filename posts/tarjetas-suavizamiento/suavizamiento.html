@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2025-01-30">
-<meta name="description" content="Aquí se realiza un ejercicio de suavizamiento de series de tiempo con información del SIE de Banco De México">
 
-<title>Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta – Gerardo Rocha Benigno</title>
+<title>Smoothing of credit card operations using time series techniques – Gerardo Rocha Benigno</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -131,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Inicio</span></a>
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../cv.html"> 
@@ -139,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../proyectos.html"> 
-<span class="menu-text">Proyectos</span></a>
+<span class="menu-text">Projects</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -157,8 +156,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a></li>
-  <li><a href="#obtención-de-información" id="toc-obtención-de-información" class="nav-link" data-scroll-target="#obtención-de-información">1. Obtención de información</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-gathering" id="toc-data-gathering" class="nav-link" data-scroll-target="#data-gathering">1. Data gathering</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">2. Exploratory Data Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -167,18 +167,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta</h1>
+<h1 class="title">Smoothing of credit card operations using time series techniques</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">series de tiempo</div>
+    <div class="quarto-category">Time Series</div>
     <div class="quarto-category">R</div>
+    <div class="quarto-category">Payment Systems</div>
+    <div class="quarto-category">Card Payments</div>
   </div>
   </div>
 
-<div>
-  <div class="description">
-    Aquí se realiza un ejercicio de suavizamiento de series de tiempo con información del SIE de Banco De México
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
@@ -199,117 +196,139 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introducción" class="level2">
-<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
-<p>El suavizamiento de series de tiempo es una técnica que permite remover de una serie de tiempo elementos aleatorios y estacionales para obtener una tendencia general de la serie.</p>
-<p>Esta técnica puede utilizarse para dar seguimiento a la evolución de la operativa de los pagos con tarjeta de crédito y débito en terminales punto de venta y que son procesados por cámaras de compensación de pagos con tarjeta en México.</p>
-<p>En este artículo se muestran diversas técnicas de suavizamiento para el número de operaciones de tarjeta de crédito y débito en terminales punto de venta. Para esto, haremos uso de la API del Sistema de Información Económica (SIE) de Banco de México y haremos uso de librerías de R para aplicar las siguientes técnicas de suavizamiento:</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Time series smoothing is a technique that removes random and seasonal elements from a time series to obtain its general trend.</p>
+<p>This technique can be used to track the evolution of credit and debit card payment operations at point-of-sale terminals processed by card payment clearing houses in Mexico.</p>
+<p>This article presents various smoothing techniques for the number of credit and debit card operations at point-of-sale terminals. For this purpose, we will use the API of Banco de México’s Sistema de Información Económica (SIE) and R libraries to apply the following smoothing techniques:</p>
 <ul>
-<li>Medía móvil</li>
-<li>Suavizamiento exponencial</li>
+<li>Moving average</li>
+<li>Exponential smoothing</li>
 <li>Seasonal-Trend decomposition using LOESS (STL)</li>
-<li>Modelod Líneal Dinámico (DLM)</li>
+<li>Dynamic Linear Model (DLM)</li>
 </ul>
+<p>Fot this notebook we will make use of the following libraries:</p>
+<div id="c1eebb9a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dotenv) <span class="co"># To load environment variables</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co"># To search for files easily</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># For data manipumation</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"R"</span>, <span class="st">"sie_utils.R"</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="obtención-de-información" class="level2">
-<h2 class="anchored" data-anchor-id="obtención-de-información">1. Obtención de información</h2>
-<p>Los datos provienen del Sistema de Información Económica (SIE) de Banco de México, que cuenta con una API para descarga programática de información.</p>
-<p>Para usar la API es necesario obtener un token de autenticación, el cual puede solicitarse en <a href="https://www.banxico.org.mx/SieAPIRest/service/v1/token">esta página web de Banco de México</a>.</p>
-<p>Una forma segura de almacenar el token es mediante variables de entorno, lo que evita exponer credenciales sensibles directamente en el código. Para esto, se crea un archivo <code>.env</code> en la carpeta raíz del proyecto donde se almacena el token en formato <code>BANXICO_TOKEN=tu_token_aqui</code>. Si bien el token de uso de la API es gratuito y no genera ningún costo, en buena práctica no compartirlo con terceros.</p>
-<p>Una vez que el archivo <code>.env</code> se encuentra en la carpeta raíz del proyecto, se puede cargar en R usando la librería <code>dotenv</code>, que lee el archivo <code>.env</code> y hace disponibles sus valores mediante la función <code>Sys.getenv()</code>. Por ejemplo, para obtener el token de autenticación se puede usar el siguiente código:</p>
-<div id="fc7a19d8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="30">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargamos libbrerías y variables de entorno</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dotenv)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load_dot_env</span>(<span class="fu">here</span>(<span class="st">".env"</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>token <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"SIE_TOKEN"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="data-gathering" class="level2">
+<h2 class="anchored" data-anchor-id="data-gathering">1. Data gathering</h2>
+<p>The data comes from Banco de México’s Sistema de Información Económica (SIE), which provides an API for programmatic data retrieval.</p>
+<p>To use the API, an authentication token is required, which can be requested on <a href="https://www.banxico.org.mx/SieAPIRest/service/v1/token">this Banco de México webpage</a>.</p>
+<p>A secure way to store the token is through environment variables, which prevents exposing sensitive credentials directly in the code. To do this, create a <code>.env</code> file in the project’s root directory where the token is stored in the format <code>BANXICO_TOKEN=your_token_here</code>. Although the API token is free and does not incur any costs, it is good practice not to share it with third parties.</p>
+<p>Once the <code>.env</code> file is in the project’s root directory, it can be loaded in R using the <code>dotenv</code> library, which reads the <code>.env</code> file and makes its values available through the <code>Sys.getenv()</code> function. For example, to retrieve the authentication token, you can use the following code:</p>
+<div id="fc7a19d8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_dot_env</span>(<span class="fu">here</span>(<span class="st">".env"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sie_token <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"SIE_TOKEN"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Una vez que el token de uso de la API del SIE ha sido cargada, es necesario cargar información. Aquí obtendremos dos series de tiempo, ua de operaciones con tarjeta de débito y otra de operaciones con tarjeta de crédito.</p>
-<p>Para esto, haremos uso de las librerías <code>httr</code> y <code>jsonlite</code> de R y de una función que nos perita automátizar la obtención de los datos.</p>
-<div id="66ada682" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="cf2c19b8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Id de la serie</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>serie_id <span class="ot">&lt;-</span> <span class="st">"SF351178"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"https://www.banxico.org.mx/SieAPIRest/service/v1/series/"</span>,serie_id,<span class="st">"/datos"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">GET</span>(url, <span class="fu">add_headers</span>(<span class="st">"Bmx-Token"</span> <span class="ot">=</span> token))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Parsear respuesta</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>datos_json <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">content</span>(response, <span class="st">"text"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>))</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> datos_json<span class="sc">$</span>bmx<span class="sc">$</span>series<span class="sc">$</span>datos[[<span class="dv">1</span>]]</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>dato <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, df<span class="sc">$</span>dato))</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<p>Once the SIE API token has been loaded, we can proceed to retrieve the data. We will obtain two time series: one for debit card operations and another for credit card operations.</p>
+<p>To accomplish this, we will use a custmom function called <code>get_sie_series</code> that makes use R’s <code>httr</code> and <code>jsonlite</code> librarie. If you want to view the details, you can see the repo folder named <strong>R</strong> that contains an R file called sie_utils.R.</p>
+<div id="782e771e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_debit <span class="ot">&lt;-</span> <span class="fu">get_sie_series</span>(<span class="st">"SF351178"</span>, sie_token)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_credit <span class="ot">&lt;-</span> <span class="fu">get_sie_series</span>(<span class="st">"SF351179"</span>, sie_token)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Join series in one df</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df_ops <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df_debit, df_credit, <span class="at">by=</span><span class="st">"fecha"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(fecha <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2023-01-01"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(fecha <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-12-31"</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_ops) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"debit"</span>, <span class="st">"credit"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>df_ops <span class="ot">&lt;-</span> df_ops <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">debit =</span> debit <span class="sc">/</span> <span class="dv">1000000</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">credit =</span> credit<span class="sc">/</span> <span class="dv">1000000</span>)</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir a numérico, manejando NAs</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fecha <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(df<span class="sc">$</span>fecha, <span class="at">format =</span> <span class="st">"%d/%m/%Y"</span>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Contamos número de registros</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Ordenamos por fecha</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">order</span>(df<span class="sc">$</span>fecha),]</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#head(df)</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-1142
-</div>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_ops)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small">
-<caption>A data.frame: 6 × 2</caption>
+<caption>A data.frame: 6 × 3</caption>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th" scope="col">fecha</th>
-<th data-quarto-table-cell-role="th" scope="col">dato</th>
+<th data-quarto-table-cell-role="th" scope="col">date</th>
+<th data-quarto-table-cell-role="th" scope="col">debit</th>
+<th data-quarto-table-cell-role="th" scope="col">credit</th>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th" scope="col">&lt;date&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
 <th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th" scope="row">1</th>
-<td>2022-12-01</td>
-<td>5491357</td>
+<td>2023-01-01</td>
+<td>16.07771</td>
+<td>5.088792</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th" scope="row">2</th>
-<td>2022-12-02</td>
-<td>5868487</td>
+<td>2023-01-02</td>
+<td>10.67967</td>
+<td>3.936692</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th" scope="row">3</th>
-<td>2022-12-03</td>
-<td>5727232</td>
+<td>2023-01-03</td>
+<td>14.68352</td>
+<td>5.650967</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th" scope="row">4</th>
-<td>2022-12-04</td>
-<td>5733744</td>
+<td>2023-01-04</td>
+<td>14.35926</td>
+<td>5.485605</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th" scope="row">5</th>
-<td>2022-12-05</td>
-<td>5666042</td>
+<td>2023-01-05</td>
+<td>14.79250</td>
+<td>5.621567</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th" scope="row">6</th>
-<td>2022-12-06</td>
-<td>5641943</td>
+<td>2023-01-06</td>
+<td>15.51339</td>
+<td>5.761273</td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<p>For this exercise, we only use information from january 2023 to december 2025, i.e., three years</p>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">2. Exploratory Data Analysis</h2>
+<p>Before we apply any smoothing technique (just as with any other data project), it’s essential to get a good understanding of the data in order to choose an appropiate modelling approach.</p>
+<div id="89771ec9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df_ops, <span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y =</span> debit)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"#5d8b96"</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y =</span> credit), <span class="at">color=</span><span class="st">"#1d7d36"</span>) <span class="sc">+</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">linetype=</span><span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray70"</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color=</span><span class="st">"black"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Payments with cards"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Number of payments (millions)"</span>, </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">x=</span> <span class="st">"Date"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="suavizamiento_files/figure-html/cell-5-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 

@@ -2,85 +2,92 @@
   {
     "objectID": "cv.html",
     "href": "cv.html",
-    "title": "Curriculum Vitae",
+    "title": "Experience",
     "section": "",
     "text": "Lead Economist | Banco de México\nEmail: g.rochabenigno@gmail.com | LinkedIn"
   },
   {
     "objectID": "cv.html#gerardo-rocha-benigno",
     "href": "cv.html#gerardo-rocha-benigno",
-    "title": "Curriculum Vitae",
+    "title": "Experience",
     "section": "",
     "text": "Lead Economist | Banco de México\nEmail: g.rochabenigno@gmail.com | LinkedIn"
   },
   {
     "objectID": "cv.html#experiencia-profesional",
     "href": "cv.html#experiencia-profesional",
-    "title": "Curriculum Vitae",
+    "title": "Experience",
     "section": "Experiencia Profesional",
     "text": "Experiencia Profesional\nLíder de especialidad en estudios de sistemas de pago e infraestructura de mercado | Banco de México | 2025 - Presente\n\nLiderazgo de equipo de 2 especialistas en análisis de sistemas de pago\nAnálisis de más de 30 millones de operaciones diarias (tarjetas, CoDi, Dimo)\nDesarrollo de modelos econométricos para evaluación regulatoria\nImplementación de modelos de machine learning para predicción y detección de anomalías\n\nInvestigador Financiero de Transparencia de Servicios Financieros | Banco de México | 2016 - 2025\n\nResponsabilidad 1\nResponsabilidad 2"
   },
   {
     "objectID": "cv.html#educación",
     "href": "cv.html#educación",
-    "title": "Curriculum Vitae",
+    "title": "Experience",
     "section": "Educación",
     "text": "Educación\nMaestría en Ciencia de Datos | ITAM | 2023 - 2026 (esperado)\n\nTesis: Machine learning probabilístico para análisis de series de tiempo\n\nLicenciatura en Economía | UNAM | 2010 - 2015\n\nPromedio: 9.34/10.0"
   },
   {
     "objectID": "cv.html#habilidades-técnicas",
     "href": "cv.html#habilidades-técnicas",
-    "title": "Curriculum Vitae",
+    "title": "Experience",
     "section": "Habilidades Técnicas",
     "text": "Habilidades Técnicas\nProgramación: Python, R\nEconometría: ARIMA, VAR, Diferencias-en-diferencias, Heckman\nMachine Learning: PyTorch, Pyro, scikit-learn\nAnálisis Espacial: GeoPandas, análisis de redes"
   },
   {
     "objectID": "proyectos.html",
     "href": "proyectos.html",
-    "title": "Proyectos",
+    "title": "Projects",
     "section": "",
-    "text": "Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta\n\n\nAquí se realiza un ejercicio de suavizamiento de series de tiempo con información del SIE de Banco De México\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Smoothing of credit card operations using time series techniques\n\n\n\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html",
     "href": "posts/tarjetas-suavizamiento/suavizamiento.html",
-    "title": "Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta",
+    "title": "Smoothing of credit card operations using time series techniques",
     "section": "",
-    "text": "El suavizamiento de series de tiempo es una técnica que permite remover de una serie de tiempo elementos aleatorios y estacionales para obtener una tendencia general de la serie.\nEsta técnica puede utilizarse para dar seguimiento a la evolución de la operativa de los pagos con tarjeta de crédito y débito en terminales punto de venta y que son procesados por cámaras de compensación de pagos con tarjeta en México.\nEn este artículo se muestran diversas técnicas de suavizamiento para el número de operaciones de tarjeta de crédito y débito en terminales punto de venta. Para esto, haremos uso de la API del Sistema de Información Económica (SIE) de Banco de México y haremos uso de librerías de R para aplicar las siguientes técnicas de suavizamiento:\n\nMedía móvil\nSuavizamiento exponencial\nSeasonal-Trend decomposition using LOESS (STL)\nModelod Líneal Dinámico (DLM)"
+    "text": "Time series smoothing is a technique that removes random and seasonal elements from a time series to obtain its general trend.\nThis technique can be used to track the evolution of credit and debit card payment operations at point-of-sale terminals processed by card payment clearing houses in Mexico.\nThis article presents various smoothing techniques for the number of credit and debit card operations at point-of-sale terminals. For this purpose, we will use the API of Banco de México’s Sistema de Información Económica (SIE) and R libraries to apply the following smoothing techniques:\n\nMoving average\nExponential smoothing\nSeasonal-Trend decomposition using LOESS (STL)\nDynamic Linear Model (DLM)\n\nFot this notebook we will make use of the following libraries:\n\nlibrary(dotenv) # To load environment variables\nlibrary(here) # To search for files easily\nlibrary(tidyverse) # For data manipumation\nlibrary(ggplot2)\nsource(here(\"R\", \"sie_utils.R\"))"
   },
   {
-    "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html#introducción",
-    "href": "posts/tarjetas-suavizamiento/suavizamiento.html#introducción",
-    "title": "Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta",
+    "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html#introduction",
+    "href": "posts/tarjetas-suavizamiento/suavizamiento.html#introduction",
+    "title": "Smoothing of credit card operations using time series techniques",
     "section": "",
-    "text": "El suavizamiento de series de tiempo es una técnica que permite remover de una serie de tiempo elementos aleatorios y estacionales para obtener una tendencia general de la serie.\nEsta técnica puede utilizarse para dar seguimiento a la evolución de la operativa de los pagos con tarjeta de crédito y débito en terminales punto de venta y que son procesados por cámaras de compensación de pagos con tarjeta en México.\nEn este artículo se muestran diversas técnicas de suavizamiento para el número de operaciones de tarjeta de crédito y débito en terminales punto de venta. Para esto, haremos uso de la API del Sistema de Información Económica (SIE) de Banco de México y haremos uso de librerías de R para aplicar las siguientes técnicas de suavizamiento:\n\nMedía móvil\nSuavizamiento exponencial\nSeasonal-Trend decomposition using LOESS (STL)\nModelod Líneal Dinámico (DLM)"
+    "text": "Time series smoothing is a technique that removes random and seasonal elements from a time series to obtain its general trend.\nThis technique can be used to track the evolution of credit and debit card payment operations at point-of-sale terminals processed by card payment clearing houses in Mexico.\nThis article presents various smoothing techniques for the number of credit and debit card operations at point-of-sale terminals. For this purpose, we will use the API of Banco de México’s Sistema de Información Económica (SIE) and R libraries to apply the following smoothing techniques:\n\nMoving average\nExponential smoothing\nSeasonal-Trend decomposition using LOESS (STL)\nDynamic Linear Model (DLM)\n\nFot this notebook we will make use of the following libraries:\n\nlibrary(dotenv) # To load environment variables\nlibrary(here) # To search for files easily\nlibrary(tidyverse) # For data manipumation\nlibrary(ggplot2)\nsource(here(\"R\", \"sie_utils.R\"))"
   },
   {
-    "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html#obtención-de-información",
-    "href": "posts/tarjetas-suavizamiento/suavizamiento.html#obtención-de-información",
-    "title": "Suavizamiento de operaciones de pagos con tarjeta en terminales punto de venta",
-    "section": "1. Obtención de información",
-    "text": "1. Obtención de información\nLos datos provienen del Sistema de Información Económica (SIE) de Banco de México, que cuenta con una API para descarga programática de información.\nPara usar la API es necesario obtener un token de autenticación, el cual puede solicitarse en esta página web de Banco de México.\nUna forma segura de almacenar el token es mediante variables de entorno, lo que evita exponer credenciales sensibles directamente en el código. Para esto, se crea un archivo .env en la carpeta raíz del proyecto donde se almacena el token en formato BANXICO_TOKEN=tu_token_aqui. Si bien el token de uso de la API es gratuito y no genera ningún costo, en buena práctica no compartirlo con terceros.\nUna vez que el archivo .env se encuentra en la carpeta raíz del proyecto, se puede cargar en R usando la librería dotenv, que lee el archivo .env y hace disponibles sus valores mediante la función Sys.getenv(). Por ejemplo, para obtener el token de autenticación se puede usar el siguiente código:\n\n# Cargamos libbrerías y variables de entorno\nlibrary(dotenv)\nlibrary(here)\n\nload_dot_env(here(\".env\"))\ntoken &lt;- Sys.getenv(\"SIE_TOKEN\")\n\nUna vez que el token de uso de la API del SIE ha sido cargada, es necesario cargar información. Aquí obtendremos dos series de tiempo, ua de operaciones con tarjeta de débito y otra de operaciones con tarjeta de crédito.\nPara esto, haremos uso de las librerías httr y jsonlite de R y de una función que nos perita automátizar la obtención de los datos.\n\nlibrary(httr)\nlibrary(jsonlite)\nlibrary(here)\n\n\n\n\n# Id de la serie\nserie_id &lt;- \"SF351178\"\n\nurl &lt;- paste0(\"https://www.banxico.org.mx/SieAPIRest/service/v1/series/\",serie_id,\"/datos\")\nresponse &lt;- GET(url, add_headers(\"Bmx-Token\" = token))\n\n# Parsear respuesta\ndatos_json &lt;- fromJSON(content(response, \"text\", encoding = \"UTF-8\"))\ndf &lt;- datos_json$bmx$series$datos[[1]]\n\ndf$dato &lt;- as.numeric(gsub(\",\", \"\", df$dato))\n\n\n# Convertir a numérico, manejando NAs\ndf$fecha &lt;- as.Date(df$fecha, format = \"%d/%m/%Y\")\n\n# Contamos número de registros\nnrow(df)\n\n# Ordenamos por fecha\ndf &lt;- df[order(df$fecha),]\n\n#head(df)\nhead(df)\n\n1142\n\n\n\nA data.frame: 6 × 2\n\n\n\nfecha\ndato\n\n\n\n&lt;date&gt;\n&lt;dbl&gt;\n\n\n\n\n1\n2022-12-01\n5491357\n\n\n2\n2022-12-02\n5868487\n\n\n3\n2022-12-03\n5727232\n\n\n4\n2022-12-04\n5733744\n\n\n5\n2022-12-05\n5666042\n\n\n6\n2022-12-06\n5641943"
+    "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html#data-gathering",
+    "href": "posts/tarjetas-suavizamiento/suavizamiento.html#data-gathering",
+    "title": "Smoothing of credit card operations using time series techniques",
+    "section": "1. Data gathering",
+    "text": "1. Data gathering\nThe data comes from Banco de México’s Sistema de Información Económica (SIE), which provides an API for programmatic data retrieval.\nTo use the API, an authentication token is required, which can be requested on this Banco de México webpage.\nA secure way to store the token is through environment variables, which prevents exposing sensitive credentials directly in the code. To do this, create a .env file in the project’s root directory where the token is stored in the format BANXICO_TOKEN=your_token_here. Although the API token is free and does not incur any costs, it is good practice not to share it with third parties.\nOnce the .env file is in the project’s root directory, it can be loaded in R using the dotenv library, which reads the .env file and makes its values available through the Sys.getenv() function. For example, to retrieve the authentication token, you can use the following code:\n\nload_dot_env(here(\".env\"))\nsie_token &lt;- Sys.getenv(\"SIE_TOKEN\")\n\nOnce the SIE API token has been loaded, we can proceed to retrieve the data. We will obtain two time series: one for debit card operations and another for credit card operations.\nTo accomplish this, we will use a custmom function called get_sie_series that makes use R’s httr and jsonlite librarie. If you want to view the details, you can see the repo folder named R that contains an R file called sie_utils.R.\n\ndf_debit &lt;- get_sie_series(\"SF351178\", sie_token)\ndf_credit &lt;- get_sie_series(\"SF351179\", sie_token)\n\n# Join series in one df\ndf_ops &lt;- left_join(df_debit, df_credit, by=\"fecha\") |&gt;\n    filter(fecha &gt;= as.Date(\"2023-01-01\")) |&gt;\n    filter(fecha &lt;= as.Date(\"2025-12-31\"))\n\n\ncolnames(df_ops) &lt;- c(\"date\", \"debit\", \"credit\")\ndf_ops &lt;- df_ops |&gt;\nmutate(debit = debit / 1000000,\n           credit = credit/ 1000000)\n\nhead(df_ops)\n\n\nA data.frame: 6 × 3\n\n\n\ndate\ndebit\ncredit\n\n\n\n&lt;date&gt;\n&lt;dbl&gt;\n&lt;dbl&gt;\n\n\n\n\n1\n2023-01-01\n16.07771\n5.088792\n\n\n2\n2023-01-02\n10.67967\n3.936692\n\n\n3\n2023-01-03\n14.68352\n5.650967\n\n\n4\n2023-01-04\n14.35926\n5.485605\n\n\n5\n2023-01-05\n14.79250\n5.621567\n\n\n6\n2023-01-06\n15.51339\n5.761273\n\n\n\n\n\nFor this exercise, we only use information from january 2023 to december 2025, i.e., three years"
+  },
+  {
+    "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html#exploratory-data-analysis",
+    "href": "posts/tarjetas-suavizamiento/suavizamiento.html#exploratory-data-analysis",
+    "title": "Smoothing of credit card operations using time series techniques",
+    "section": "2. Exploratory Data Analysis",
+    "text": "2. Exploratory Data Analysis\nBefore we apply any smoothing technique (just as with any other data project), it’s essential to get a good understanding of the data in order to choose an appropiate modelling approach.\n\nggplot(data = df_ops, aes(x=date, y = debit)) +\n    geom_line(color=\"#5d8b96\") +\n    geom_line(aes(x=date, y = credit), color=\"#1d7d36\") + \n    theme_minimal() + \n    theme(\n        panel.grid.major.x = element_blank(),\n        panel.grid.minor.x = element_blank(),\n        panel.grid.major.y = element_line(linetype=\"dashed\", color = \"gray70\"),\n        panel.grid.minor.y = element_blank(),\n        axis.line = element_line(color=\"black\")\n    ) +\n    labs(title = \"Payments with cards\",\n        y = \"Number of payments (millions)\", \n        x= \"Date\"\n        )"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Gerardo Rocha Benigno",
     "section": "",
-    "text": "Economista con más de 9 años de experiencia en inclusión y transparencia de servicios financieros, crédito al consumo y sistemas de pago al menudeo. Actualmente me desempeño como Líder de Especialidad de Estudios de Sistemas de Pago e Infraestructuras de Mercado en Banco de México.\nA lo largo de mi carrera he trabajado con grandes volúmenes de información para generar estadísticas, crear indicadores y evaluar el impacto de políticas públicas en crédito y sistemas de pago en México.\nEn mis tiempos libres disfruto pasar tiempo con mi familia, hacer ejercicio, jugar videojuegos y seguir al Toluca."
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degrre in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
   },
   {
-    "objectID": "index.html#acerca-de-mí",
-    "href": "index.html#acerca-de-mí",
+    "objectID": "index.html#about-me",
+    "href": "index.html#about-me",
     "title": "Gerardo Rocha Benigno",
     "section": "",
-    "text": "Economista con más de 9 años de experiencia en inclusión y transparencia de servicios financieros, crédito al consumo y sistemas de pago al menudeo. Actualmente me desempeño como Líder de Especialidad de Estudios de Sistemas de Pago e Infraestructuras de Mercado en Banco de México.\nA lo largo de mi carrera he trabajado con grandes volúmenes de información para generar estadísticas, crear indicadores y evaluar el impacto de políticas públicas en crédito y sistemas de pago en México.\nEn mis tiempos libres disfruto pasar tiempo con mi familia, hacer ejercicio, jugar videojuegos y seguir al Toluca."
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degrre in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
   },
   {
-    "objectID": "index.html#áreas-de-interés",
-    "href": "index.html#áreas-de-interés",
+    "objectID": "index.html#areas-of-interest",
+    "href": "index.html#areas-of-interest",
     "title": "Gerardo Rocha Benigno",
-    "section": "Áreas de interés",
-    "text": "Áreas de interés\n\nCrédito bancario comercial, al consumo y a la vivienda\nSistemas de pago al menudeo: tarjetas y transferencias de bajo valor\nEconometría aplicada y análisis de series de tiempo\nAprendizaje automático y modelos probabilísticos\nInferencia bayesiana y estadística"
+    "section": "Areas of interest",
+    "text": "Areas of interest\n\nBank credit (commercial, consumer and housing),\nFinancial inclusion and transparency of financial services,\nRetail payment systems (cards and low-value transfers),\nApplied econometrics and time series analysis,\nMachine learning and probabilistic models,\nBayesian inference,\nCausal inference,\nPython, R and SQL."
   }
 ]
