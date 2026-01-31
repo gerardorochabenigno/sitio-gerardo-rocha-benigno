@@ -5,11 +5,11 @@ website:
   title: "Gerardo Rocha Benigno"
   navbar:
     left:
-      - text: "Inicio"
+      - text: "Home"
         href: index.qmd
       - text: "CV"
         href: cv.qmd
-      - text: "Proyectos"
+      - text: "Projects"
         href: proyectos.qmd
 
 format:
