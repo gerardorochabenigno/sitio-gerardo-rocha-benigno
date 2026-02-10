@@ -7,45 +7,44 @@ format:
 
 **Email:** [g.rochabenigno@gmail.com](mailto:g.rochabenigno@gmail.com)  
 **LinkedIn:** [linkedin.com/in/gerardorochabenigno](https://www.linkedin.com/in/gerardorochabenigno)  
-**Celular:** 5619322951
 
-## Educación
+## Education
 
-**Instituto Tecnológico Autónomo de México (ITAM)** | Ciudad de México  
-*Maestría en Ciencia de Datos: Cursando* | 2024 -- Presente
+**Instituto Tecnológico Autónomo de México (ITAM)** | Mexico City  
+*Master's in Data Science: In Progress* | 2024 -- Present
 
-**Universidad Nacional Autónoma de México (UNAM)** | Ciudad de México  
-*Licenciatura en Economía; Promedio: 9.34* | 2011 -- 2015
+**Universidad Nacional Autónoma de México (UNAM)** | Mexico City  
+*Bachelor's in Economics; GPA: 9.34/10* | 2011 -- 2015
 
-## Experiencia
+## Experience
 
-**Banco de México (Banxico)** | Ciudad de México  
-*Líder de Especialidad de Estudios de Sistemas de Pago e Infraestucturas de Mercado* | Enero 2025 - Presente
+**Banco de México (Banxico)** | Mexico City  
+*Lead Specialist, Payment Systems and Market Infrastructures Research* | January 2025 - Present
 
-- **Coordinación de equipo:** Lidero y superviso un equipo de 2 análistas sobre sistemas de pago y estudios cuantitativos.
-- **Estudios sobre sistemas de pagos:** Encargado de la elaboración de estudios económicos sobre sistemas de pago para fundamentar políticas públicas y decisiones regulatorias sobre redes de medios de disposición, adopción de medios de pago al menudeo e inclusión financiera.
-- **Diseminación de información:** A cargo de la generación y diseminación de información en el Sistema de Información Económica (SIE-Banxico) sobre pagos con tarjeta (semanalmente), CoDi (semanalmente), comercio electrónico (trimestralmente), transferencias de fondos electrónicos (mensualmente) y transferencias internacionales (mensualmente).
-- **Monitoreo de sistemas de pagos:** Monitoreo mediante modelos econométricos y de series de tiempo la evolución de los mercados de pagos con tarjeta, CoDi y Dimo, procesando bases de datos con más de 30 millones de operaciones diarias.
-- **Promoción de los sistemas de pago:** Superviso la generación de materiales audiovisuales y su promoción en medios masivos de comunicación.
+- **Team coordination:** Lead and supervise a team of 2 analysts on payment systems and quantitative studies.
+- **Payment systems research:** Responsible for conducting economic studies on payment systems to support public policies and regulatory decisions on payment networks, retail payment adoption, and financial inclusion.
+- **Information dissemination:** In charge of generating and disseminating information in the Economic Information System (SIE-Banxico) on card payments (weekly), CoDi (weekly), e-commerce (quarterly), electronic fund transfers (monthly), and international transfers (monthly).
+- **Payment systems monitoring:** Monitor the evolution of card payment, CoDi, and Dimo markets using econometric and time series models, processing databases with over 30 million daily transactions.
+- **Payment systems promotion:** Supervise the generation of audiovisual materials and their promotion through mass media.
 
-**Banco de México (Banxico)** | Ciudad de México  
-*Investigador Financiero, Subgerencia de Transparencia de Servicios Financieros* | Octubre 2016 - Diciembre 2024
+**Bank of Mexico (Banxico)** | Mexico City  
+*Financial Researcher, Financial Inclusion and Transparency* | October 2016 - December 2024
 
-- **Publicación de informes y reportes:** Encargado de la publicación de los Reportes de Indicadores Básicos de Tarjeta de Crédito y Créditos Personales.
-- **Estudios en transparencia e inclusión financiera:** Encargado de la elaboración de estudios sobre inclusión financiera mediante técnicas de econometría en los mercados de crédito al consumo y elaboración de encuestas para la transparencia de servicios financieros al menudeo.
-- **Diseminación de información:** Encargado de la publicación de indicadores relacionados con créditos al consumo y la vivienda en el SIE-Banxico y herramientas de análisis de datos públicas.
+- **Reports and publications:** Responsible for publishing the Basic Indicators Reports for Credit Cards and Personal Loans.
+- **Financial inclusion and transparency research:** Responsible for conducting financial inclusion studies using econometric techniques in consumer credit markets and developing surveys for retail financial services transparency.
+- **Information dissemination:** Responsible for publishing indicators related to consumer and housing credit in SIE-Banxico and public data analysis tools.
 
-**Comisión Nacional del Sistema de Ahorro para el Retiro (Consar)** | Ciudad de México  
-*Análista* | Abril 2016 - Octubre 2016
+**National Commission for the Retirement Savings System (Consar)** | Mexico City  
+*Analyst* | April 2016 - October 2016
 
-- **Publicaciones para el cumplimiento regulatorio:** Elaboración de reportes y presentaciones al Presidente de CONSAR, elaboración del Informe Trimestral al H. Congreso de la Unión Sobre la Situación del SAR (I-Trim 2016).
+- **Regulatory compliance publications:** Preparation of reports and presentations to the President of CONSAR, preparation of the Quarterly Report to the Congress on the Situation of the Retirement Savings System (Q1-2016).
 
-## Habilidades
+## Skills
 
-**Modelado estadístico y ML:** Microeconometría (logit, probit, DID, Heckman), series de tiempo (ARIMA, VAR, estado-espacio), ML (Random Forest, XGBoost, redes neuronales), análisis bayesiano (GLM, modelos jerárquicos), análisis espacial.
+**Statistical modeling and ML:** Microeconometrics, time series, ML (Random Forest, Boosting), Bayesian analysis (GLM, hierarchical models), spatial analysis.
 
-**Programación:** Python (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL y PySpark.
+**Programming:** Python (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, and PySpark.
 
-**Infraestructura:** AWS (S3, EMR, SageMaker), bases de datos (SQL, vector DBs).
+**Infrastructure:** AWS (S3, EMR, SageMaker), databases (SQL, vector DBs).
 
-**Idiomas:** Español (nativo), Inglés (avanzado).
+**Languages:** Spanish (native), English (advanced).
