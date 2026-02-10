@@ -1,47 +1,51 @@
 ---
-title: "Experience"
+title: "Gerardo Rocha Benigno"
+format:
+  html:
+    toc: false
 ---
 
-## Gerardo Rocha Benigno
-Lead Economist | Banco de México  
-Email: g.rochabenigno@gmail.com | [LinkedIn](https://linkedin.com/in/gerardo-rocha-benigno)
-
----
-
-## Experiencia Profesional
-
-**Líder de especialidad en estudios de sistemas de pago e infraestructura de mercado** | Banco de México | 2025 - Presente
-
-- Liderazgo de equipo de 2 especialistas en análisis de sistemas de pago
-- Análisis de más de 30 millones de operaciones diarias (tarjetas, CoDi, Dimo)
-- Desarrollo de modelos econométricos para evaluación regulatoria
-- Implementación de modelos de machine learning para predicción y detección de anomalías
-
-**Investigador Financiero de Transparencia de Servicios Financieros** | Banco de México | 2016 - 2025
-
-- Responsabilidad 1
-- Responsabilidad 2
-
----
+**Email:** [g.rochabenigno@gmail.com](mailto:g.rochabenigno@gmail.com)  
+**LinkedIn:** [linkedin.com/in/gerardorochabenigno](https://www.linkedin.com/in/gerardorochabenigno)  
+**Celular:** 5619322951
 
 ## Educación
 
-**Maestría en Ciencia de Datos** | ITAM | 2023 - 2026 (esperado)
+**Instituto Tecnológico Autónomo de México (ITAM)** | Ciudad de México  
+*Maestría en Ciencia de Datos: Cursando* | 2024 -- Presente
 
-- Tesis: Machine learning probabilístico para análisis de series de tiempo
+**Universidad Nacional Autónoma de México (UNAM)** | Ciudad de México  
+*Licenciatura en Economía; Promedio: 9.34* | 2011 -- 2015
 
-**Licenciatura en Economía** | UNAM | 2010 - 2015
+## Experiencia
 
-- Promedio: 9.34/10.0
+**Banco de México (Banxico)** | Ciudad de México  
+*Líder de Especialidad de Estudios de Sistemas de Pago e Infraestucturas de Mercado* | Enero 2025 - Presente
 
----
+- **Coordinación de equipo:** Lidero y superviso un equipo de 2 análistas sobre sistemas de pago y estudios cuantitativos.
+- **Estudios sobre sistemas de pagos:** Encargado de la elaboración de estudios económicos sobre sistemas de pago para fundamentar políticas públicas y decisiones regulatorias sobre redes de medios de disposición, adopción de medios de pago al menudeo e inclusión financiera.
+- **Diseminación de información:** A cargo de la generación y diseminación de información en el Sistema de Información Económica (SIE-Banxico) sobre pagos con tarjeta (semanalmente), CoDi (semanalmente), comercio electrónico (trimestralmente), transferencias de fondos electrónicos (mensualmente) y transferencias internacionales (mensualmente).
+- **Monitoreo de sistemas de pagos:** Monitoreo mediante modelos econométricos y de series de tiempo la evolución de los mercados de pagos con tarjeta, CoDi y Dimo, procesando bases de datos con más de 30 millones de operaciones diarias.
+- **Promoción de los sistemas de pago:** Superviso la generación de materiales audiovisuales y su promoción en medios masivos de comunicación.
 
-## Habilidades Técnicas
+**Banco de México (Banxico)** | Ciudad de México  
+*Investigador Financiero, Subgerencia de Transparencia de Servicios Financieros* | Octubre 2016 - Diciembre 2024
 
-**Programación:** Python, R  
-**Econometría:** ARIMA, VAR, Diferencias-en-diferencias, Heckman  
-**Machine Learning:** PyTorch, Pyro, scikit-learn  
-**Análisis Espacial:** GeoPandas, análisis de redes
+- **Publicación de informes y reportes:** Encargado de la publicación de los Reportes de Indicadores Básicos de Tarjeta de Crédito y Créditos Personales.
+- **Estudios en transparencia e inclusión financiera:** Encargado de la elaboración de estudios sobre inclusión financiera mediante técnicas de econometría en los mercados de crédito al consumo y elaboración de encuestas para la transparencia de servicios financieros al menudeo.
+- **Diseminación de información:** Encargado de la publicación de indicadores relacionados con créditos al consumo y la vivienda en el SIE-Banxico y herramientas de análisis de datos públicas.
 
----
+**Comisión Nacional del Sistema de Ahorro para el Retiro (Consar)** | Ciudad de México  
+*Análista* | Abril 2016 - Octubre 2016
 
+- **Publicaciones para el cumplimiento regulatorio:** Elaboración de reportes y presentaciones al Presidente de CONSAR, elaboración del Informe Trimestral al H. Congreso de la Unión Sobre la Situación del SAR (I-Trim 2016).
+
+## Habilidades
+
+**Modelado estadístico y ML:** Microeconometría (logit, probit, DID, Heckman), series de tiempo (ARIMA, VAR, estado-espacio), ML (Random Forest, XGBoost, redes neuronales), análisis bayesiano (GLM, modelos jerárquicos), análisis espacial.
+
+**Programación:** Python (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, PySpark.
+
+**Infraestructura:** AWS (S3, EMR, SageMaker), bases de datos (SQL, vector DBs).
+
+**Idiomas:** Español (nativo), Inglés (avanzado).
