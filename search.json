@@ -25,7 +25,7 @@
     "href": "cv.html#habilidades",
     "title": "Gerardo Rocha Benigno",
     "section": "Habilidades",
-    "text": "Habilidades\nModelado estadístico y ML: Microeconometría (logit, probit, DID, Heckman), series de tiempo (ARIMA, VAR, estado-espacio), ML (Random Forest, XGBoost, redes neuronales), análisis bayesiano (GLM, modelos jerárquicos), análisis espacial.\nProgramación: Python (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, PySpark.\nInfraestructura: AWS (S3, EMR, SageMaker), bases de datos (SQL, vector DBs).\nIdiomas: Español (nativo), Inglés (avanzado)."
+    "text": "Habilidades\nModelado estadístico y ML: Microeconometría (logit, probit, DID, Heckman), series de tiempo (ARIMA, VAR, estado-espacio), ML (Random Forest, XGBoost, redes neuronales), análisis bayesiano (GLM, modelos jerárquicos), análisis espacial.\nProgramación: Python (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL y PySpark.\nInfraestructura: AWS (S3, EMR, SageMaker), bases de datos (SQL, vector DBs).\nIdiomas: Español (nativo), Inglés (avanzado)."
   },
   {
     "objectID": "proyectos.html",
