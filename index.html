@@ -39,7 +39,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-anchor-id="about-me">About me</h2>
 <p>I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.</p>
 <p>Throughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.</p>
-<p>I have a degrre in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).</p>
+<p>I have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).</p>
 <p>In my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games.</p>
 </section>
 <section id="areas-of-interest" class="level2">
@@ -240,7 +240,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/gerardorochabenigno\.github\.io\/sitio-gerardo-rocha-benigno\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
