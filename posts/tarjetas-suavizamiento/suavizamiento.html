@@ -264,7 +264,7 @@ window.Quarto = {
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sie_token <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"SIE_TOKEN"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Once the SIE API token has been loaded, we can proceed to retrieve the data. We will obtain two time series: one for debit card operations and another for credit card operations.</p>
-<p>To accomplish this, we will use a custmom function called <code>get_sie_series</code> that makes use R’s <code>httr</code> and <code>jsonlite</code> librarie. If you want to view the details, you can see the repo folder named <strong>R</strong> that contains an R file called sie_utils.R.</p>
+<p>To accomplish this, we will use a custmom function called <code>get_sie_series</code> that makes use R’s <code>httr</code> and <code>jsonlite</code> libraries. If you want to view the details, you can see the repo folder named <strong>R</strong> that contains an R file called sie_utils.R.</p>
 <div id="782e771e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_debit <span class="ot">&lt;-</span> <span class="fu">get_sie_series</span>(<span class="st">"SF351178"</span>, sie_token)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_credit <span class="ot">&lt;-</span> <span class="fu">get_sie_series</span>(<span class="st">"SF351179"</span>, sie_token)</span>
@@ -380,7 +380,7 @@ window.Quarto = {
  Max.   :2025-12-31   Max.   :28.46   Max.   :11.242  </code></pre>
 </div>
 </div>
-<p>The series shows a clear weekly seasonal pattern — operations tend to drop on weekends and peak mid-week — alongside a mild upward trend. Before applying smoothing techniques, it is useful to inspect the autocorrelation structure to confirm these patterns.</p>
+<p>The series shows a clear weekly seasonal pattern — operations tend to drop on mondays and tuesday and peak on friday and saturday — alongside a mild upward trend. Before applying smoothing techniques, it is useful to inspect the autocorrelation structure to confirm these patterns.</p>
 <div id="0u5wupfunyq9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;r&quot;}}" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(df_ops<span class="sc">$</span>debit,  <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main =</span> <span class="st">"ACF — Debit card operations"</span>)</span>
