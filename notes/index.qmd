@@ -8,3 +8,7 @@ listing:
   filter-ui: true
   fields: [title, categories, description]
 ---
+
+Esta sección reúne mis notas personales sobre temas que me resultan interesantes. Las notas están basadas en cursos, libros y artículos que he estudiado por curiosidad propia o como parte de mi formación en el ITAM.
+Por el momento, el foco principal es inferencia causal, siguiendo el marco desarrollado por Peng Ding en A First Course in Causal Inference. Con el tiempo, planeo agregar notas sobre otros temas como series de tiempo, aprendizaje automático probabilístico y métodos bayesianos.
+Las notas no pretenden ser tratamientos exhaustivos de cada tema, sino un registro de mi entendimiento de las ideas principales, acompañado de código reproducible en Python.
