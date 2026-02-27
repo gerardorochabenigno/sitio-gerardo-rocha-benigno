@@ -2,7 +2,7 @@
 title: "Causal Inference"
 listing:
   type: table
-  contents: "*.qmd"
+  contents: "[!index]*.qmd"
   sort: "order"
   fields: [order, title, description]
 ---
