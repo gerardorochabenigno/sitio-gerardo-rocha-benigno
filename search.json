@@ -1,10 +1,59 @@
 [
   {
-    "objectID": "proyectos.html",
-    "href": "proyectos.html",
-    "title": "Projects",
+    "objectID": "notes/index.html",
+    "href": "notes/index.html",
+    "title": "Notes",
     "section": "",
-    "text": "Smoothing of credit card operations using time series techniques\n\n\n\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Title\nCategories\nDescription\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "Email: g.rochabenigno@gmail.com\nLinkedIn: linkedin.com/in/gerardorochabenigno"
+  },
+  {
+    "objectID": "cv.html#education",
+    "href": "cv.html#education",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Education",
+    "text": "Education\nInstituto Tecnológico Autónomo de México (ITAM) | Mexico City\nMaster’s in Data Science: In Progress | 2024 – Present\nUniversidad Nacional Autónoma de México (UNAM) | Mexico City\nBachelor’s in Economics; GPA: 9.34/10 | 2011 – 2015"
+  },
+  {
+    "objectID": "cv.html#experience",
+    "href": "cv.html#experience",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Experience",
+    "text": "Experience\nBanco de México (Banxico) | Mexico City\nLead Specialist, Payment Systems and Market Infrastructures Research | January 2025 - Present\n\nTeam coordination: Lead and supervise a team of 2 analysts on payment systems and quantitative studies.\nPayment systems research: Responsible for conducting economic studies on payment systems to support public policies and regulatory decisions on payment networks, retail payment adoption, and financial inclusion.\nInformation dissemination: In charge of generating and disseminating information in the Economic Information System (SIE-Banxico) on card payments (weekly), CoDi (weekly), e-commerce (quarterly), electronic fund transfers (monthly), and international transfers (monthly).\nPayment systems monitoring: Monitor the evolution of card payment, CoDi, and Dimo markets using econometric and time series models, processing databases with over 30 million daily transactions.\nPayment systems promotion: Supervise the generation of audiovisual materials and their promotion through mass media.\n\nBank of Mexico (Banxico) | Mexico City\nFinancial Researcher, Financial Inclusion and Transparency | October 2016 - December 2024\n\nReports and publications: Responsible for publishing the Basic Indicators Reports for Credit Cards and Personal Loans.\nFinancial inclusion and transparency research: Responsible for conducting financial inclusion studies using econometric techniques in consumer credit markets and developing surveys for retail financial services transparency.\nInformation dissemination: Responsible for publishing indicators related to consumer and housing credit in SIE-Banxico and public data analysis tools.\n\nNational Commission for the Retirement Savings System (Consar) | Mexico City\nAnalyst | April 2016 - October 2016\n\nRegulatory compliance publications: Preparation of reports and presentations to the President of CONSAR, preparation of the Quarterly Report to the Congress on the Situation of the Retirement Savings System (Q1-2016)."
+  },
+  {
+    "objectID": "cv.html#skills",
+    "href": "cv.html#skills",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Skills",
+    "text": "Skills\nStatistical modeling and ML: Microeconometrics, time series, ML (Random Forest, Boosting), Bayesian analysis (GLM, hierarchical models), spatial analysis.\nProgramming: Python for data analysis and ML (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R for data analysis and spatial analysis (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, and PySpark.\nInfrastructure: AWS (S3, EMR, SageMaker), databases (SQL).\nLanguages: Spanish (native), English (fluent)."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
+  },
+  {
+    "objectID": "index.html#about-me",
+    "href": "index.html#about-me",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
+  },
+  {
+    "objectID": "index.html#areas-of-interest",
+    "href": "index.html#areas-of-interest",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Areas of interest",
+    "text": "Areas of interest\n\nBank credit (commercial, consumer and housing),\nFinancial inclusion and transparency of financial services,\nRetail payment systems (cards and low-value transfers),\nApplied econometrics and time series analysis,\nMachine learning and probabilistic models,\nBayesian inference,\nCausal inference,\nPython, R and SQL."
   },
   {
     "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html",
@@ -77,52 +126,10 @@
     "text": "8. Conclusions\nThe four methods converge on a consistent picture of the series but differ in trade-offs:\n\n\n\n\n\n\n\n\nMethod\nStrengths\nLimitations\n\n\n\n\nMoving Average\nSimple, interpretable, no model assumptions\nLoses observations at boundaries; all lags equally weighted\n\n\nHolt-Winters\nHandles trend + seasonality; adapts to level changes\nRequires stationarity of seasonal amplitude; can overfit\n\n\nSTL\nRobust to outliers; decomposes into interpretable components; flexible seasonal window\nDoes not produce probability intervals by default\n\n\nDLM\nFull probabilistic framework; online updating via Kalman filter; can produce credible intervals\nMore complex to specify and estimate; computationally intensive\n\n\n\nFor monitoring card payment trends at Banco de México, the STL trend and DLM level are the most suitable: STL provides clean decomposition for reporting, while DLM is preferable when probabilistic uncertainty quantification or real-time sequential updating is needed.\nBoth debit and credit card operations show a consistent upward trend over the 2023–2025 period, with a stable weekly seasonal pattern (lower on weekends) and no structural breaks in the remainder components."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Gerardo Rocha Benigno",
+    "objectID": "proyectos.html",
+    "href": "proyectos.html",
+    "title": "Projects",
     "section": "",
-    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
-  },
-  {
-    "objectID": "index.html#about-me",
-    "href": "index.html#about-me",
-    "title": "Gerardo Rocha Benigno",
-    "section": "",
-    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
-  },
-  {
-    "objectID": "index.html#areas-of-interest",
-    "href": "index.html#areas-of-interest",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Areas of interest",
-    "text": "Areas of interest\n\nBank credit (commercial, consumer and housing),\nFinancial inclusion and transparency of financial services,\nRetail payment systems (cards and low-value transfers),\nApplied econometrics and time series analysis,\nMachine learning and probabilistic models,\nBayesian inference,\nCausal inference,\nPython, R and SQL."
-  },
-  {
-    "objectID": "cv.html",
-    "href": "cv.html",
-    "title": "Gerardo Rocha Benigno",
-    "section": "",
-    "text": "Email: g.rochabenigno@gmail.com\nLinkedIn: linkedin.com/in/gerardorochabenigno"
-  },
-  {
-    "objectID": "cv.html#education",
-    "href": "cv.html#education",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Education",
-    "text": "Education\nInstituto Tecnológico Autónomo de México (ITAM) | Mexico City\nMaster’s in Data Science: In Progress | 2024 – Present\nUniversidad Nacional Autónoma de México (UNAM) | Mexico City\nBachelor’s in Economics; GPA: 9.34/10 | 2011 – 2015"
-  },
-  {
-    "objectID": "cv.html#experience",
-    "href": "cv.html#experience",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Experience",
-    "text": "Experience\nBanco de México (Banxico) | Mexico City\nLead Specialist, Payment Systems and Market Infrastructures Research | January 2025 - Present\n\nTeam coordination: Lead and supervise a team of 2 analysts on payment systems and quantitative studies.\nPayment systems research: Responsible for conducting economic studies on payment systems to support public policies and regulatory decisions on payment networks, retail payment adoption, and financial inclusion.\nInformation dissemination: In charge of generating and disseminating information in the Economic Information System (SIE-Banxico) on card payments (weekly), CoDi (weekly), e-commerce (quarterly), electronic fund transfers (monthly), and international transfers (monthly).\nPayment systems monitoring: Monitor the evolution of card payment, CoDi, and Dimo markets using econometric and time series models, processing databases with over 30 million daily transactions.\nPayment systems promotion: Supervise the generation of audiovisual materials and their promotion through mass media.\n\nBank of Mexico (Banxico) | Mexico City\nFinancial Researcher, Financial Inclusion and Transparency | October 2016 - December 2024\n\nReports and publications: Responsible for publishing the Basic Indicators Reports for Credit Cards and Personal Loans.\nFinancial inclusion and transparency research: Responsible for conducting financial inclusion studies using econometric techniques in consumer credit markets and developing surveys for retail financial services transparency.\nInformation dissemination: Responsible for publishing indicators related to consumer and housing credit in SIE-Banxico and public data analysis tools.\n\nNational Commission for the Retirement Savings System (Consar) | Mexico City\nAnalyst | April 2016 - October 2016\n\nRegulatory compliance publications: Preparation of reports and presentations to the President of CONSAR, preparation of the Quarterly Report to the Congress on the Situation of the Retirement Savings System (Q1-2016)."
-  },
-  {
-    "objectID": "cv.html#skills",
-    "href": "cv.html#skills",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Skills",
-    "text": "Skills\nStatistical modeling and ML: Microeconometrics, time series, ML (Random Forest, Boosting), Bayesian analysis (GLM, hierarchical models), spatial analysis.\nProgramming: Python for data analysis and ML (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R for data analysis and spatial analysis (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, and PySpark.\nInfrastructure: AWS (S3, EMR, SageMaker), databases (SQL).\nLanguages: Spanish (native), English (fluent)."
+    "text": "Smoothing of credit card operations using time series techniques\n\n\n\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
   }
 ]

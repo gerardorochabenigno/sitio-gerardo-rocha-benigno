@@ -1,5 +1,9 @@
 [
   {
+    "listing": "/notes/index.html",
+    "items": []
+  },
+  {
     "listing": "/proyectos.html",
     "items": [
       "/posts/tarjetas-suavizamiento/suavizamiento.html"
