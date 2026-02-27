@@ -1,12 +1,18 @@
 [
   {
-    "listing": "/notes/index.html",
+    "listing": "/notes/causal-inference/index.html",
     "items": []
   },
   {
     "listing": "/proyectos.html",
     "items": [
       "/posts/tarjetas-suavizamiento/suavizamiento.html"
+    ]
+  },
+  {
+    "listing": "/notes/index.html",
+    "items": [
+      "/notes/causal-inference/index.html"
     ]
   }
 ]
