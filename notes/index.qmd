@@ -1,0 +1,10 @@
+---
+title: "Notes"
+listing:
+  type: table
+  contents: 
+    - causal-inference
+    - time-series
+  filter-ui: true
+  fields: [title, categories, description]
+---
