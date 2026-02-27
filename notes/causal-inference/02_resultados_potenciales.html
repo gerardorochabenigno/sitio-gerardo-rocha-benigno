@@ -189,6 +189,7 @@ window.Quarto = {
   <li><a href="#resultados-potenciales" id="toc-resultados-potenciales" class="nav-link active" data-scroll-target="#resultados-potenciales">Resultados potenciales</a>
   <ul class="collapse">
   <li><a href="#notación-de-resultados-potenciales" id="toc-notación-de-resultados-potenciales" class="nav-link" data-scroll-target="#notación-de-resultados-potenciales">Notación de resultados potenciales</a></li>
+  <li><a href="#efectos-causales-por-subgrupo-y-la-paradoja-de-yule-simpson" id="toc-efectos-causales-por-subgrupo-y-la-paradoja-de-yule-simpson" class="nav-link" data-scroll-target="#efectos-causales-por-subgrupo-y-la-paradoja-de-yule-simpson">Efectos causales por subgrupo y la paradoja de Yule-Simpson</a></li>
   <li><a href="#mecanismo-de-asignación-de-tratamiento" id="toc-mecanismo-de-asignación-de-tratamiento" class="nav-link" data-scroll-target="#mecanismo-de-asignación-de-tratamiento">Mecanismo de asignación de tratamiento</a></li>
   </ul></li>
   </ul>
@@ -224,7 +225,7 @@ window.Quarto = {
 </header>
 
 
-<div id="cell-1" class="cell">
+<div id="cell-1" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -238,12 +239,11 @@ window.Quarto = {
 <p>Con esto, cada unidad <span class="math inline">\(i\)</span> tiene dos versiones del resultado de interés: <span class="math display">\[Y_i(1), Y_i(0)\]</span></p>
 <p>los cuales son llamados <em>resultados potenciales</em> bajo las intervenciones <span class="math inline">\(1\)</span> y <span class="math inline">\(0\)</span>, respectivamente.</p>
 <p><br></p>
-<p><strong>SUPUESTOS</strong></p>
-<p>La definición anterior conlleva dos</p>
-<p><strong><em>1. Supuesto de no interferencia</em></strong>: Los resultados potenciales de la unidad <span class="math inline">\(i\)</span> no dependen de los resultados potenciales de otra unidad <span class="math inline">\(j\)</span> ni viceversa, los resultados potenciales de la unidad <span class="math inline">\(j\)</span> no dependen de los resultados potenciales de la unidad <span class="math inline">\(i\)</span>.</p>
-<p><strong><em>2. Supuesto de consistencia</em></strong>: No existen otras versiones del tratamiento. Lo anterior equivale a decir que el tratamiento se encuentra bien definido.</p>
-<p>Los supuestos 1 y 2, combinados, dan el supuesto número 3: <em>Stable Unit Treatment Value Assumption</em> o conocido como <em>SUTVA</em></p>
-<p><strong><em>3. SUTVA</em></strong>: Bajo SUTVA y un tratamiento de dos niveles, se puede formar la <em>tabla de ciencia</em></p>
+<p><strong>Supuestos</strong></p>
+<p>La definición anterior conlleva dos supuestos.</p>
+<p><strong><em>1. No interferencia</em></strong>: Los resultados potenciales de la unidad <span class="math inline">\(i\)</span> no dependen del tratamiento asignado a ninguna otra unidad <span class="math inline">\(j\)</span>. En otras palabras, lo que le pase a <span class="math inline">\(j\)</span> no afecta lo que le hubiera pasado a <span class="math inline">\(i\)</span>.</p>
+<p><strong><em>2. Consistencia</em></strong>: No existen versiones múltiples del tratamiento; el tratamiento está bien definido. Si la unidad <span class="math inline">\(i\)</span> recibe el tratamiento, entonces su resultado observado es <span class="math inline">\(Y_i(1)\)</span>.</p>
+<p>Los supuestos 1 y 2 combinados forman el <em>Stable Unit Treatment Value Assumption</em> o <strong>SUTVA</strong>. Bajo SUTVA, los resultados potenciales de cada unidad son fijos y no dependen de la asignación de tratamiento de otras unidades, lo que hace posible construir la <em>tabla de ciencia</em>:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -275,21 +275,26 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
+<p>La tabla de ciencia es un objeto conceptual: en la práctica, cada unidad solo puede recibir un nivel del tratamiento, por lo que solo una de las dos columnas es observable para cada fila (unidad).</p>
 <p><br></p>
-<p><strong>Definición: efectos causales <span class="math inline">\(\tau_i\)</span></strong></p>
-<p>Para cada unidad <span class="math inline">\(i\)</span>, los efectos causales se definen como la resta de los efectos de aplicar el tratamiento y el control (notese que esto es asumiendo que es posible observar ambos resultados potenciales).</p>
-<p><span class="math display">\[\tau_i = Y_I(1) - Y_I(0)\]</span></p>
-<p>Sin embargo, en la realidad solo podemos observar uno de los dos resultados potenciales, es decir, la mitad de la <em>Tabla de Ciencia</em>.</p>
+<p><strong>Definición: efecto causal individual <span class="math inline">\(\tau_i\)</span></strong></p>
+<p>El efecto causal para la unidad <span class="math inline">\(i\)</span> se define como la diferencia entre sus dos resultados potenciales:</p>
+<p><span class="math display">\[\tau_i = Y_i(1) - Y_i(0)\]</span></p>
+<p>Este es el contraste fundamental de la inferencia causal. El problema es que nunca podemos observar <span class="math inline">\(\tau_i\)</span> directamente, porque solo observamos uno de los dos resultados potenciales: el que corresponde al tratamiento que efectivamente recibió la unidad. El resultado que no observamos se llama <em>contrafactual</em>.</p>
 <p><br></p>
-<p><strong>Definición: efectos causales <span class="math inline">\(\tau_i\)</span></strong></p>
-<p>Para cada unidad <span class="math inline">\(i\)</span>, los efectos causales se definen como la resta de los efectos de aplicar el tratamiento y el control (notese que esto es asumiendo que es posible observar ambos resultados potenciales).</p>
-<p><span class="math display">\[\tau_i = Y_I(1) - Y_I(0)\]</span></p>
-<p>Sin embargo, en la realidad solo podemos observar uno de los dos resultados potenciales, es decir, la mitad de la <em>Tabla de Ciencia</em>.</p>
-<p><br></p>
-<p><strong>Definición: Efecto Causal Promedio (ACE o ATE) <span class="math inline">\(\tau\)</span></strong></p>
-<p>El Efecto Causal Promedio (ACE o ATE) es el promedio de los efectos causales.</p>
-<p><span class="math display">\[\tau = n^{-1}\sum_{i=1}^{n}\{Y_i(1) - Y_i(0)\} = n^{-1}\sum_{i=1}^{n}Y_i(1) - n^{-1}\sum_{i=1}^{n}Y_i(0)\]</span></p>
-<div id="cell-3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;executionInfo&quot;,&quot;value&quot;:{&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1771615741808,&quot;user_tz&quot;:360,&quot;elapsed&quot;:44,&quot;user&quot;:{&quot;displayName&quot;:&quot;Gerardo Rocha&quot;,&quot;userId&quot;:&quot;00467688634316245812&quot;}}}" data-outputid="b7f1c3ee-ae34-4674-bf02-73e61dee30cc">
+<p><strong>Definición: Efecto Causal Promedio (ATE) <span class="math inline">\(\tau\)</span></strong></p>
+<p>Dado que <span class="math inline">\(\tau_i\)</span> no es identificable a nivel individual, el objeto de interés más común es el promedio sobre todas las unidades:</p>
+<p><span class="math display">\[\tau = n^{-1}\sum_{i=1}^{n}\{Y_i(1) - Y_i(0)\} = \bar{Y}(1) - \bar{Y}(0)\]</span></p>
+<p>donde <span class="math inline">\(\bar{Y}(1)\)</span> y <span class="math inline">\(\bar{Y}(0)\)</span> son los promedios poblacionales de los resultados potenciales bajo tratamiento y control, respectivamente.</p>
+</section>
+<section id="efectos-causales-por-subgrupo-y-la-paradoja-de-yule-simpson" class="level2">
+<h2 class="anchored" data-anchor-id="efectos-causales-por-subgrupo-y-la-paradoja-de-yule-simpson">Efectos causales por subgrupo y la paradoja de Yule-Simpson</h2>
+<p>El ATE puede descomponerse como un promedio ponderado de los efectos causales en subgrupos de la población. Si <span class="math inline">\(x\)</span> indica la pertenencia a un grupo, entonces:</p>
+<p><span class="math display">\[\tau = \sum_x \Pr(X=x) \cdot \tau_x\]</span></p>
+<p>donde <span class="math inline">\(\tau_x = \mathbb{E}[Y_i(1) - Y_i(0) \mid X_i = x]\)</span> es el efecto causal promedio dentro del grupo <span class="math inline">\(x\)</span>.</p>
+<p>Esto es relevante porque la <em>paradoja de Yule-Simpson</em> surge cuando se comparan diferencias de medias en los datos observados sin controlar por covariables. Puede ocurrir que la dirección del efecto se invierta al agregar o desagregar grupos. Sin embargo, <strong>en términos de resultados potenciales no existe tal paradoja</strong>: el ATE siempre es el promedio ponderado de los efectos por subgrupo, independientemente de cómo estén distribuidos los grupos.</p>
+<p>El siguiente ejemplo ilustra este punto: aunque los grupos difieren en su nivel de <span class="math inline">\(Y_i(0)\)</span>, el efecto causal dentro de cada grupo es similar, y el ATE global es simplemente el promedio ponderado por tamaño de grupo.</p>
+<div id="cell-4" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Efectos causales, subgrupos y la no existencia de la paradoja de Yule-Simpson</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># En este ejemplo, vamos a calcular los efectos causales de subgrupos</span></span>
@@ -316,31 +321,30 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>Efectos causales por grupo:
  x
-0    1.863225
-1    2.043695
+0    2.026268
+1    1.925103
 Name: tau_grupo, dtype: float64
-Efecto causal global: 1.9570693860119674</code></pre>
+Efecto causal global: 1.9787206915824778</code></pre>
 </div>
 </div>
 </section>
 <section id="mecanismo-de-asignación-de-tratamiento" class="level2">
 <h2 class="anchored" data-anchor-id="mecanismo-de-asignación-de-tratamiento">Mecanismo de asignación de tratamiento</h2>
-<p><br></p>
-<p>Consideremos una variable indicadora de tratamiento para la unidad <span class="math inline">\(i\)</span>, <span class="math inline">\(Z_i\)</span>, la cuál es vectorizada como <span class="math inline">\(Z = (Z_1, Z_2, ..., Z_n)\)</span>.</p>
-<p><br></p>
-<p>El resultado observado de la unidad <span class="math inline">\(i\)</span>, <span class="math inline">\(Y_i\)</span>, es una función de los resultados potenciales y del indicador de tratamiento <span class="math inline">\(Z_i\)</span>.</p>
+<p>Sea <span class="math inline">\(Z_i\)</span> una variable indicadora de tratamiento para la unidad <span class="math inline">\(i\)</span>, vectorizada como <span class="math inline">\(\mathbf{Z} = (Z_1, Z_2, ..., Z_n)^T\)</span>.</p>
+<p>El resultado observado de la unidad <span class="math inline">\(i\)</span> es:</p>
 <p><span class="math display">\[\begin{align}
-Y_i &amp;= \begin{cases} Y_i(1), &amp; \text{if } Z_i = 1 \\ Y_i(0), &amp; \text{if } Z_i = 0 \end{cases}\\
+Y_i &amp;= \begin{cases} Y_i(1), &amp; \text{si } Z_i = 1 \\ Y_i(0), &amp; \text{si } Z_i = 0 \end{cases}\\
 &amp;= Z_i Y_i(1) + (1 - Z_i)Y_i(0)\\
-&amp;= Y_i(0) + Z_i\{Y_i(1) - Y_i(0)\}\\
 &amp;= Y_i(0) + Z_i\tau_i.
 \end{align}\]</span></p>
-<p>En la última ecuación, puede observarse que los efectos causales pueden ser heterogéneos entre unidades.</p>
-<p>En un experimento, al aplicarse el tratamiento binario, uno de los resultados potenciales se convierte en un dato faltante. Este dato faltante es el contrafactual (es decir, lo que no ocurre).</p>
+<p>La última expresión deja ver que los efectos causales pueden ser heterogéneos entre unidades: el mismo tratamiento puede tener efectos distintos dependiendo de quién lo recibe.</p>
+<p>Cuando se aplica el tratamiento, uno de los dos resultados potenciales se vuelve no observable. Ese resultado no observado es el <em>contrafactual</em>.</p>
 <p><br></p>
-<p><span style="color:blue"><strong>Definición: mecanismo de asignacion de tratamiento</strong></span></p>
-<p>El mecanismo de asignación de tratamiento es la distribución de probabilidad de <span class="math inline">\(Z_i\)</span></p>
-<div id="cell-5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;executionInfo&quot;,&quot;value&quot;:{&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1771622201177,&quot;user_tz&quot;:360,&quot;elapsed&quot;:32,&quot;user&quot;:{&quot;displayName&quot;:&quot;Gerardo Rocha&quot;,&quot;userId&quot;:&quot;00467688634316245812&quot;}}}" data-outputid="40bc1fa6-87d0-4442-e032-78bf86116849">
+<p><strong>Definición: mecanismo de asignación de tratamiento</strong></p>
+<p>El mecanismo de asignación es la distribución de probabilidad condicional de <span class="math inline">\(\mathbf{Z}\)</span> dado los resultados potenciales y las covariables:</p>
+<p><span class="math display">\[\Pr(\mathbf{Z} = \mathbf{z} \mid \mathbf{Y}(1), \mathbf{Y}(0), \mathbf{X})\]</span></p>
+<p>El mecanismo de asignación determina qué tan difícil es estimar los efectos causales a partir de los datos observados. Si el mecanismo depende de los resultados potenciales —es decir, si quienes reciben el tratamiento son distintos de quienes no lo reciben en formas que también afectan el resultado— entonces la simple diferencia de medias entre tratados y controles no identifica el ATE.</p>
+<div id="cell-6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;executionInfo&quot;,&quot;value&quot;:{&quot;elapsed&quot;:32,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1771622201177,&quot;user&quot;:{&quot;displayName&quot;:&quot;Gerardo Rocha&quot;,&quot;userId&quot;:&quot;00467688634316245812&quot;},&quot;user_tz&quot;:360}}" data-outputid="40bc1fa6-87d0-4442-e032-78bf86116849" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Efectos potenciales y mecanismo de asignación de tratamiento</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos mostrar el rol crucial del mecanismo de asignación de tratamiento</span></span>
@@ -366,10 +370,13 @@ Y_i &amp;= \begin{cases} Y_i(1), &amp; \text{if } Z_i = 1 \\ Y_i(0), &amp; \text
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Diferencia de medias en el caso del doctor ingenuo:"</span>,</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      <span class="bu">float</span>(np.mean(y[z<span class="op">==</span><span class="dv">1</span>]) <span class="op">-</span> np.mean(y[z<span class="op">==</span><span class="dv">0</span>])))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Diferencia de medias en el caso del doctor perfecto: 2.409152425687915
-Diferencia de medias en el caso del doctor ingenuo: -0.4969622684915165</code></pre>
+<pre><code>Diferencia de medias en el caso del doctor perfecto: 2.691626430163731
+Diferencia de medias en el caso del doctor ingenuo: -0.7993871776399679</code></pre>
 </div>
 </div>
+<p>En el ejemplo, <span class="math inline">\(\tau_i = -0.5 + Y_i(0)\)</span>, por lo que el efecto del tratamiento es positivo solo cuando <span class="math inline">\(Y_i(0) &gt; 0.5\)</span>. El doctor perfecto asigna el tratamiento precisamente a esas unidades, que de por sí tienen resultados potenciales altos bajo control. La diferencia de medias observada entre tratados y controles sobreestima considerablemente el ATE real.</p>
+<p>El doctor ingenuo asigna el tratamiento de forma aleatoria, sin importar quién se beneficia más. Dado que la asignación es independiente de los resultados potenciales, la diferencia de medias observada es un estimador insesgado del ATE, aunque con varianza mayor.</p>
+<p>El punto central es que el mecanismo de asignación no modifica los resultados potenciales ni el ATE verdadero; solo determina si lo que observamos en los datos permite estimarlo de forma válida. Un mecanismo que depende de los resultados potenciales introduce sesgo de selección.</p>
 
 
 </section>
