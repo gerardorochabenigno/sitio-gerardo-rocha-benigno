@@ -1,7 +1,10 @@
 [
   {
-    "listing": "/notes/causal-inference/index.html",
-    "items": []
+    "listing": "/notes/index.html",
+    "items": [
+      "/notes/causal-inference/02_resultados_potenciales.html",
+      "/notes/causal-inference/index.html"
+    ]
   },
   {
     "listing": "/proyectos.html",
@@ -10,9 +13,7 @@
     ]
   },
   {
-    "listing": "/notes/index.html",
-    "items": [
-      "/notes/causal-inference/index.html"
-    ]
+    "listing": "/notes/causal-inference/index.html",
+    "items": []
   }
 ]

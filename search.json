@@ -1,17 +1,80 @@
 [
   {
-    "objectID": "notes/causal-inference/index.html",
-    "href": "notes/causal-inference/index.html",
-    "title": "Causal Inference",
+    "objectID": "notes/causal-inference/02_resultados_potenciales.html",
+    "href": "notes/causal-inference/02_resultados_potenciales.html",
+    "title": "Resultados potenciales",
     "section": "",
-    "text": "order\nTitle\nDescription\n\n\n\n\n\nNo matching items"
+    "text": "import numpy as np\nimport pandas as pd"
   },
   {
-    "objectID": "proyectos.html",
-    "href": "proyectos.html",
-    "title": "Projects",
+    "objectID": "notes/causal-inference/02_resultados_potenciales.html#notación-de-resultados-potenciales",
+    "href": "notes/causal-inference/02_resultados_potenciales.html#notación-de-resultados-potenciales",
+    "title": "Resultados potenciales",
+    "section": "Notación de resultados potenciales",
+    "text": "Notación de resultados potenciales\n\nDefinición: Resultados potenciales \\(Y_i(1)\\) y \\(Y_i(0)\\)\nConsideremos un estudio con \\(n\\) unidades cuyo índice es \\(i = 1, 2,...,n\\) en donde el tratamiento tiene dos niveles: * \\(1\\) para el tratamiento, * \\(0\\) para el control.\nCon esto, cada unidad \\(i\\) tiene dos versiones del resultado de interés: \\[Y_i(1), Y_i(0)\\]\nlos cuales son llamados resultados potenciales bajo las intervenciones \\(1\\) y \\(0\\), respectivamente.\n\nSUPUESTOS\nLa definición anterior conlleva dos\n1. Supuesto de no interferencia: Los resultados potenciales de la unidad \\(i\\) no dependen de los resultados potenciales de otra unidad \\(j\\) ni viceversa, los resultados potenciales de la unidad \\(j\\) no dependen de los resultados potenciales de la unidad \\(i\\).\n2. Supuesto de consistencia: No existen otras versiones del tratamiento. Lo anterior equivale a decir que el tratamiento se encuentra bien definido.\nLos supuestos 1 y 2, combinados, dan el supuesto número 3: Stable Unit Treatment Value Assumption o conocido como SUTVA\n3. SUTVA: Bajo SUTVA y un tratamiento de dos niveles, se puede formar la tabla de ciencia\n\n\n\n\\(i\\)\n\\(Y_i(1)\\)\n\\(Y_i(0)\\)\n\n\n\n\n1\n\\(Y_1(1)\\)\n\\(Y_1(0)\\)\n\n\n2\n\\(Y_2(1)\\)\n\\(Y_2(0)\\)\n\n\n\\(\\vdots\\)\n\\(\\vdots\\)\n\\(\\vdots\\)\n\n\n\\(n\\)\n\\(Y_n(1)\\)\n\\(Y_n(0)\\)\n\n\n\n\nDefinición: efectos causales \\(\\tau_i\\)\nPara cada unidad \\(i\\), los efectos causales se definen como la resta de los efectos de aplicar el tratamiento y el control (notese que esto es asumiendo que es posible observar ambos resultados potenciales).\n\\[\\tau_i = Y_I(1) - Y_I(0)\\]\nSin embargo, en la realidad solo podemos observar uno de los dos resultados potenciales, es decir, la mitad de la Tabla de Ciencia.\n\nDefinición: efectos causales \\(\\tau_i\\)\nPara cada unidad \\(i\\), los efectos causales se definen como la resta de los efectos de aplicar el tratamiento y el control (notese que esto es asumiendo que es posible observar ambos resultados potenciales).\n\\[\\tau_i = Y_I(1) - Y_I(0)\\]\nSin embargo, en la realidad solo podemos observar uno de los dos resultados potenciales, es decir, la mitad de la Tabla de Ciencia.\n\nDefinición: Efecto Causal Promedio (ACE o ATE) \\(\\tau\\)\nEl Efecto Causal Promedio (ACE o ATE) es el promedio de los efectos causales.\n\\[\\tau = n^{-1}\\sum_{i=1}^{n}\\{Y_i(1) - Y_i(0)\\} = n^{-1}\\sum_{i=1}^{n}Y_i(1) - n^{-1}\\sum_{i=1}^{n}Y_i(0)\\]\n\n# Efectos causales, subgrupos y la no existencia de la paradoja de Yule-Simpson\n\n# En este ejemplo, vamos a calcular los efectos causales de subgrupos\n# En este caso, necesitamos generar dependencia por grupo y generar dependencia\n# del efecto potencial de aplicar el tratamiento, dado el efecto potencial del control\n\nx = np.random.binomial(1, 0.5, 100)\ny_0 = np.where(x==1, np.random.normal(8,1,100), np.random.normal(4,1,100) ) # dependencia e\ny_1 = y_0 + np.random.normal(loc = 2, scale = 0.5, size = 100)\ntau = y_1 - y_0\nn = np.array([100 - np.sum(x), np.sum(x)])\n\ndf = pd.DataFrame({\"y_1\":y_1, \"y_0\":y_0, \"x\":x, \"tau_grupo\":tau})\n\ndf_summary = df.groupby(\"x\").mean()\ndf_summary[\"n\"] = n/np.sum(n)\n\n# tau_grupo presenta el efecto causal promedio del subgrupo.\nprint(\"Efectos causales por grupo:\\n\",df_summary['tau_grupo'])\n\n# El efecto causal promedio global es el promedio ponderado de tau_grupo\ntau_global = np.sum(df_summary['n']*df_summary['tau_grupo'])\nprint(\"Efecto causal global:\", float(tau_global))\n\nEfectos causales por grupo:\n x\n0    1.863225\n1    2.043695\nName: tau_grupo, dtype: float64\nEfecto causal global: 1.9570693860119674"
+  },
+  {
+    "objectID": "notes/causal-inference/02_resultados_potenciales.html#mecanismo-de-asignación-de-tratamiento",
+    "href": "notes/causal-inference/02_resultados_potenciales.html#mecanismo-de-asignación-de-tratamiento",
+    "title": "Resultados potenciales",
+    "section": "Mecanismo de asignación de tratamiento",
+    "text": "Mecanismo de asignación de tratamiento\n\nConsideremos una variable indicadora de tratamiento para la unidad \\(i\\), \\(Z_i\\), la cuál es vectorizada como \\(Z = (Z_1, Z_2, ..., Z_n)\\).\n\nEl resultado observado de la unidad \\(i\\), \\(Y_i\\), es una función de los resultados potenciales y del indicador de tratamiento \\(Z_i\\).\n\\[\\begin{align}\nY_i &= \\begin{cases} Y_i(1), & \\text{if } Z_i = 1 \\\\ Y_i(0), & \\text{if } Z_i = 0 \\end{cases}\\\\\n&= Z_i Y_i(1) + (1 - Z_i)Y_i(0)\\\\\n&= Y_i(0) + Z_i\\{Y_i(1) - Y_i(0)\\}\\\\\n&= Y_i(0) + Z_i\\tau_i.\n\\end{align}\\]\nEn la última ecuación, puede observarse que los efectos causales pueden ser heterogéneos entre unidades.\nEn un experimento, al aplicarse el tratamiento binario, uno de los resultados potenciales se convierte en un dato faltante. Este dato faltante es el contrafactual (es decir, lo que no ocurre).\n\nDefinición: mecanismo de asignacion de tratamiento\nEl mecanismo de asignación de tratamiento es la distribución de probabilidad de \\(Z_i\\)\n\n# Ejemplo: Efectos potenciales y mecanismo de asignación de tratamiento\n\n# Queremos mostrar el rol crucial del mecanismo de asignación de tratamiento\n# sobre los estimadores de los efectos causales promedio\n\n# Generamos los resultados potenciales y los efectos causales\nn = 50\ny_0 = np.random.normal(size=n)\ntau = -0.5 + y_0\ny_1 = y_0 + tau\n\n# Doctor perfecto: asigna el tratamiento cuando el efecto causal es no negativo\nz = np.where(tau &gt;= 0, 1, 0) # Mecanismo de asignación, asigna cuando tau es mayor a 1\ny = y_0 + z*tau # resultado observado\n\nprint(\"Diferencia de medias en el caso del doctor perfecto:\",\n      float(np.mean(y[z==1]) - np.mean(y[z==0])))\n\n# Doctor ingenuo: asigna el tratamiento aleatoriamente\nz = np.random.binomial(1, 0.5, n)\ny = y_0 + z*tau # resultado observado\n\nprint(\"Diferencia de medias en el caso del doctor ingenuo:\",\n      float(np.mean(y[z==1]) - np.mean(y[z==0])))\n\nDiferencia de medias en el caso del doctor perfecto: 2.409152425687915\nDiferencia de medias en el caso del doctor ingenuo: -0.4969622684915165"
+  },
+  {
+    "objectID": "notes/index.html",
+    "href": "notes/index.html",
+    "title": "Notes",
     "section": "",
-    "text": "Smoothing of credit card operations using time series techniques\n\n\n\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\nDescription\n\n\n\n\n\n\n\n\nResultados potenciales\n\n\nCausal Inference\n\n\nModelo de resultados potenciales y mecanismo de asignación\n\n\n\n\n\n\nCausal Inference\n\n\n \n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "Email: g.rochabenigno@gmail.com\nLinkedIn: linkedin.com/in/gerardorochabenigno"
+  },
+  {
+    "objectID": "cv.html#education",
+    "href": "cv.html#education",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Education",
+    "text": "Education\nInstituto Tecnológico Autónomo de México (ITAM) | Mexico City\nMaster’s in Data Science: In Progress | 2024 – Present\nUniversidad Nacional Autónoma de México (UNAM) | Mexico City\nBachelor’s in Economics; GPA: 9.34/10 | 2011 – 2015"
+  },
+  {
+    "objectID": "cv.html#experience",
+    "href": "cv.html#experience",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Experience",
+    "text": "Experience\nBanco de México (Banxico) | Mexico City\nLead Specialist, Payment Systems and Market Infrastructures Research | January 2025 - Present\n\nTeam coordination: Lead and supervise a team of 2 analysts on payment systems and quantitative studies.\nPayment systems research: Responsible for conducting economic studies on payment systems to support public policies and regulatory decisions on payment networks, retail payment adoption, and financial inclusion.\nInformation dissemination: In charge of generating and disseminating information in the Economic Information System (SIE-Banxico) on card payments (weekly), CoDi (weekly), e-commerce (quarterly), electronic fund transfers (monthly), and international transfers (monthly).\nPayment systems monitoring: Monitor the evolution of card payment, CoDi, and Dimo markets using econometric and time series models, processing databases with over 30 million daily transactions.\nPayment systems promotion: Supervise the generation of audiovisual materials and their promotion through mass media.\n\nBank of Mexico (Banxico) | Mexico City\nFinancial Researcher, Financial Inclusion and Transparency | October 2016 - December 2024\n\nReports and publications: Responsible for publishing the Basic Indicators Reports for Credit Cards and Personal Loans.\nFinancial inclusion and transparency research: Responsible for conducting financial inclusion studies using econometric techniques in consumer credit markets and developing surveys for retail financial services transparency.\nInformation dissemination: Responsible for publishing indicators related to consumer and housing credit in SIE-Banxico and public data analysis tools.\n\nNational Commission for the Retirement Savings System (Consar) | Mexico City\nAnalyst | April 2016 - October 2016\n\nRegulatory compliance publications: Preparation of reports and presentations to the President of CONSAR, preparation of the Quarterly Report to the Congress on the Situation of the Retirement Savings System (Q1-2016)."
+  },
+  {
+    "objectID": "cv.html#skills",
+    "href": "cv.html#skills",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Skills",
+    "text": "Skills\nStatistical modeling and ML: Microeconometrics, time series, ML (Random Forest, Boosting), Bayesian analysis (GLM, hierarchical models), spatial analysis.\nProgramming: Python for data analysis and ML (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R for data analysis and spatial analysis (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, and PySpark.\nInfrastructure: AWS (S3, EMR, SageMaker), databases (SQL).\nLanguages: Spanish (native), English (fluent)."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
+  },
+  {
+    "objectID": "index.html#about-me",
+    "href": "index.html#about-me",
+    "title": "Gerardo Rocha Benigno",
+    "section": "",
+    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
+  },
+  {
+    "objectID": "index.html#areas-of-interest",
+    "href": "index.html#areas-of-interest",
+    "title": "Gerardo Rocha Benigno",
+    "section": "Areas of interest",
+    "text": "Areas of interest\n\nBank credit (commercial, consumer and housing),\nFinancial inclusion and transparency of financial services,\nRetail payment systems (cards and low-value transfers),\nApplied econometrics and time series analysis,\nMachine learning and probabilistic models,\nBayesian inference,\nCausal inference,\nPython, R and SQL."
   },
   {
     "objectID": "posts/tarjetas-suavizamiento/suavizamiento.html",
@@ -84,59 +147,17 @@
     "text": "8. Conclusions\nThe four methods converge on a consistent picture of the series but differ in trade-offs:\n\n\n\n\n\n\n\n\nMethod\nStrengths\nLimitations\n\n\n\n\nMoving Average\nSimple, interpretable, no model assumptions\nLoses observations at boundaries; all lags equally weighted\n\n\nHolt-Winters\nHandles trend + seasonality; adapts to level changes\nRequires stationarity of seasonal amplitude; can overfit\n\n\nSTL\nRobust to outliers; decomposes into interpretable components; flexible seasonal window\nDoes not produce probability intervals by default\n\n\nDLM\nFull probabilistic framework; online updating via Kalman filter; can produce credible intervals\nMore complex to specify and estimate; computationally intensive\n\n\n\nFor monitoring card payment trends at Banco de México, the STL trend and DLM level are the most suitable: STL provides clean decomposition for reporting, while DLM is preferable when probabilistic uncertainty quantification or real-time sequential updating is needed.\nBoth debit and credit card operations show a consistent upward trend over the 2023–2025 period, with a stable weekly seasonal pattern (lower on weekends) and no structural breaks in the remainder components."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Gerardo Rocha Benigno",
+    "objectID": "proyectos.html",
+    "href": "proyectos.html",
+    "title": "Projects",
     "section": "",
-    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
+    "text": "Smoothing of credit card operations using time series techniques\n\n\n\n\n\n\n\n\n\nJan 30, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "index.html#about-me",
-    "href": "index.html#about-me",
-    "title": "Gerardo Rocha Benigno",
+    "objectID": "notes/causal-inference/index.html",
+    "href": "notes/causal-inference/index.html",
+    "title": "Causal Inference",
     "section": "",
-    "text": "I am an economist with more than 9 years of experience in financial inclusion, transparency of financial services, bank credit and retail payment systems. Currently, I work as Lead Specialist in Payment Systems and Market Infrastructures Research at the Bank of Mexico.\nThroughout my career I have worked with large volumes of information to generate statistics, create indicators and evaluate the impact of public policies and regulations on credit and payment systems in Mexico.\nI have a degree in Economics from the National Autonomous University of Mexico (UNAM) and currently I am pursuing a master’s degree in Data Science at the Autonomous Technological Institute of Mexico (ITAM).\nIn my free time I enjoy spending time with my family, exercising, playing video games and watching Toluca FC games."
-  },
-  {
-    "objectID": "index.html#areas-of-interest",
-    "href": "index.html#areas-of-interest",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Areas of interest",
-    "text": "Areas of interest\n\nBank credit (commercial, consumer and housing),\nFinancial inclusion and transparency of financial services,\nRetail payment systems (cards and low-value transfers),\nApplied econometrics and time series analysis,\nMachine learning and probabilistic models,\nBayesian inference,\nCausal inference,\nPython, R and SQL."
-  },
-  {
-    "objectID": "cv.html",
-    "href": "cv.html",
-    "title": "Gerardo Rocha Benigno",
-    "section": "",
-    "text": "Email: g.rochabenigno@gmail.com\nLinkedIn: linkedin.com/in/gerardorochabenigno"
-  },
-  {
-    "objectID": "cv.html#education",
-    "href": "cv.html#education",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Education",
-    "text": "Education\nInstituto Tecnológico Autónomo de México (ITAM) | Mexico City\nMaster’s in Data Science: In Progress | 2024 – Present\nUniversidad Nacional Autónoma de México (UNAM) | Mexico City\nBachelor’s in Economics; GPA: 9.34/10 | 2011 – 2015"
-  },
-  {
-    "objectID": "cv.html#experience",
-    "href": "cv.html#experience",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Experience",
-    "text": "Experience\nBanco de México (Banxico) | Mexico City\nLead Specialist, Payment Systems and Market Infrastructures Research | January 2025 - Present\n\nTeam coordination: Lead and supervise a team of 2 analysts on payment systems and quantitative studies.\nPayment systems research: Responsible for conducting economic studies on payment systems to support public policies and regulatory decisions on payment networks, retail payment adoption, and financial inclusion.\nInformation dissemination: In charge of generating and disseminating information in the Economic Information System (SIE-Banxico) on card payments (weekly), CoDi (weekly), e-commerce (quarterly), electronic fund transfers (monthly), and international transfers (monthly).\nPayment systems monitoring: Monitor the evolution of card payment, CoDi, and Dimo markets using econometric and time series models, processing databases with over 30 million daily transactions.\nPayment systems promotion: Supervise the generation of audiovisual materials and their promotion through mass media.\n\nBank of Mexico (Banxico) | Mexico City\nFinancial Researcher, Financial Inclusion and Transparency | October 2016 - December 2024\n\nReports and publications: Responsible for publishing the Basic Indicators Reports for Credit Cards and Personal Loans.\nFinancial inclusion and transparency research: Responsible for conducting financial inclusion studies using econometric techniques in consumer credit markets and developing surveys for retail financial services transparency.\nInformation dissemination: Responsible for publishing indicators related to consumer and housing credit in SIE-Banxico and public data analysis tools.\n\nNational Commission for the Retirement Savings System (Consar) | Mexico City\nAnalyst | April 2016 - October 2016\n\nRegulatory compliance publications: Preparation of reports and presentations to the President of CONSAR, preparation of the Quarterly Report to the Congress on the Situation of the Retirement Savings System (Q1-2016)."
-  },
-  {
-    "objectID": "cv.html#skills",
-    "href": "cv.html#skills",
-    "title": "Gerardo Rocha Benigno",
-    "section": "Skills",
-    "text": "Skills\nStatistical modeling and ML: Microeconometrics, time series, ML (Random Forest, Boosting), Bayesian analysis (GLM, hierarchical models), spatial analysis.\nProgramming: Python for data analysis and ML (pandas, matplotlib, seaborn, scikit-learn, pytorch, statsmodels), R for data analysis and spatial analysis (tidyverse, ggplot, tidymodels, dlm, sf, leaflet, jags), SQL, and PySpark.\nInfrastructure: AWS (S3, EMR, SageMaker), databases (SQL).\nLanguages: Spanish (native), English (fluent)."
-  },
-  {
-    "objectID": "notes/index.html",
-    "href": "notes/index.html",
-    "title": "Notes",
-    "section": "",
-    "text": "Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nCategories\n\n\n\nDescription\n\n\n\n\n\n\n\n\nCausal Inference\n\n\n \n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "order\nTitle\nDescription\n\n\n\n\n\nNo matching items"
   }
 ]
