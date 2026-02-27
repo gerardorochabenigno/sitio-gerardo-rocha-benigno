@@ -3,7 +3,8 @@ title: "Notes"
 listing:
   type: table
   contents: 
-    - causal-inference
+    - "causal-inference/[!index]*.qmd"
+    - "causal-inference/[!index]*.ipynb"
   filter-ui: true
   fields: [title, categories, description]
 ---
