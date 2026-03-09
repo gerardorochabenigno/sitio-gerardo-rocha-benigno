@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Introducción a la inferencia causal">
+
+<title>Introducción – Gerardo Rocha Benigno</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-afa37c5c79185640b9c231024f4fe5ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Gerardo Rocha Benigno</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../proyectos.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introducción-distinción-entre-estadística-clásica-e-inferencia-causalla-mayor-parte-de-los-estudios-hechos-con-estadística-se-basan-en-la-búsqueda-de-métricas-de-asociación-más-que-en-la-búsqueda-de-relaciones-de-causalidad.-un-ejemplo-de-esta-construcción-de-métricas-es-el-coeficiente-de-correlación-de-pearson-o-spearman.estas-medidas-de-asociación-solo-cuantifican-cómo-dos-variables-digamos-x-e-y-se-mueven-juntas-ya-sea-por-una-causa-común-selección-o-azar-no-responden-a-una-pregunta-distinta-si-se-interviene-sobre-x-cambia-y-como-consecuenciapara-esto-se-debe-recurrir-al-uso-de-la-estadística-desde-otra-perspectiva-la-de-la-inferencia-causal-ya-que-nos-permite-introducir-un-lenguaje-formal-y-métodos-para-identificar-relaciones-causales-organizados-en-dos-grandes-bloques-estudios-aleatorizados-y-estudios-observacionales.la-inferencia-causal-permite-identificar-relaciones-causales-mediante-la-predicción-contrafactual-es-decir-estimar-lo-que-hubiera-pasado-a-la-variable-de-respuesta-y-de-unidades-bajo-estudio-si-hubiesen-sido-expuestas-a-otra-condición-o-intervención-el-contrafactual.contrafactual-palabra-que-significa-contrario-a-los-hechos.-en-inferencia-causal-se-refiere-al-escenario-que-se-hubiera-observado-si-se-hubiera-aplicado-una-intervención-distinta-a-la-que-se-aplicó.-inferencia-causal-elementos-necesariospara-poder-realizar-el-salto-entre-la-estadística-y-la-inferencia-causal-es-necesario-establecer-lo-siguiente.---un-marco-de-trabajo-donde-se-defina-qué-es-un-efecto-causal-bajo-escenarios-generales.---supuestos-bajo-los-cuales-se-pueda-declarar-o-identificar-causalidad.---evaluar-la-sensibilidad-de-los-supuestos-para-encontrar-formas-de-mitigar-la-fuerza-de-estos.-notacióntratamiento-denotado-como-z_i-para-la-unidad-bajo-estudio-i-y-vectorizado-como-z-para-todas-las-unidades-el-tratamiento-generalmente-es-un-vector-con-entradas-discretas-donde-cada-valor-se-refiere-a-un-tratamiento-en-específico.-por-ejemplo-en-un-tratamiento-binario-z_i-in-01-donde-generalmente-1-se-refiere-al-tratamiento-la-aplicación-de-una-medicina-en-un-estudio-clínico-una-política-de-reducción-de-tasas-de-interés-a-créditos-otorgados-a-mujeres-etc.-y-0-se-refiere-al-control-la-aplicación-de-un-placebo-o-no-aplicar-ninguna-política.respuesta-usualmente-se-denota-como-y_i-y-se-refiere-a-la-variable-de-interés-sobre-la-cuál-se-busca-encontrar-una-relación-causal-sobrevivencia-de-un-paciente-por-la-aplicación-de-una-medicina-número-de-créditos-otorgados-a-mujeres-etc..covariadas-y-confusores-las-covariadas-son-características-observadas-de-las-unidades-bajo-estudio-generalmente-denotadas-como-x_i-donde-x_i-puede-ser-un-vector-y-x-una-matriz.-un-subconjunto-de-estas-los-confusores-son-aquellas-que-afectan-tanto-la-asignación-al-tratamiento-z_i-como-la-variable-de-respuesta-y_i-y-por-ello-pueden-confundir-el-efecto-causal-estimado-por-ejemplo-comorbilidades-de-los-pacientes-en-un-estudio-clínico-o-la-predisposición-de-las-mujeres-a-obtener-créditos-en-el-sistema-financiero-formal.-cuando-las-covariables-no-son-observadas-pueden-denotarse-como-u_i-por-ejemplo-una-covariable-no-observada-podría-ser-una-enfermedad-no-diagnosticada-previa-o-el-nivel-de-ingreso-de-las-mujeres.-sesgosun-problema-de-los-estudios-causales-es-el-sesgo-el-cual-puede-provenir-de-las-siguientes-fuentes---confusión-es-posible-que-los-resultados-observados-sobre-la-variable-de-respuesta-y-no-sea-el-resultado-de-la-aplicación-de-un-tratamiento-sino-de-las-características-observadas-o-no-observadas-de-las-unidades-bajo-estudio.---selección-es-posible-que-la-asignación-de-los-tratamientos-no-provenga-de-un-proceso-de-aleatorización-sino-por-alguna-regla-distinta.-por-ejemplo-en-un-estudio-clínico-las-unidades-a-las-que-se-les-asigna-el-tratamiento-pueden-ser-personas-más-enfermas-o-que-una-política-de-reducción-de-tasas-de-interés-puede-asignarse-a-mujeres-bajo-la-percepción-de-que-este-grupo-tiene-menor-acceso-al-crédito-formal-cuando-en-realidad-esa-diferencia-no-existe-la-asignación-responde-a-una-creencia-no-a-un-proceso-aleatorizado.---medición-este-problema-ocurre-cuando-no-es-posible-medir-bien-las-características-y-respuestas-de-las-unidades-bajo-estudio.-por-ejemplo-el-ingreso-de-un-solicitante-de-crédito-puede-estar-mal-medido-porque-este-pudo-dar-una-cifra-superior-a-la-real-para-aumentar-la-probabilidad-de-otorgamiento.-confusiónel-mayor-problema-en-la-búsqueda-de-relaciones-causales-la-causa-la-confusión-ya-que-la-presencia-de-este-fenómeno-no-permite-distinguir-adecuadamente-el-efecto-de-un-tratamiento-z_i-sobre-la-variable-de-respuesta-y_i-del-efecto-de-las-covariadas-x_i.image-2.png-correlación-asociación-y-la-paradoja-de-yule-simpson-medidas-de-asociación---correlación-de-pearson-mide-el-grado-de-asociación-lineal-entre-dos-variables-x-e-yrho-xy-fractextcovxysqrttextvarxtextvary---regresión-lineal-simpley-alpha-beta-x-epsilony-puede-demostrarse-que-beta-es-igual-a-la-correlación-ajustada-por-la-desviación-estándarbeta-fractextcovxytextvarx-rho-xysqrtfractextvarxtextvary-tablas-de-contingenciauna-tabla-de-contingencia-es-una-tabla-de-frecuencias-sobre-dos-variables-de-interés.-consideremos-la-variable-de-respuesta-y-in-01-y-un-tratamiento-binario-z-in-01.-la-tabla-de-contingencia-está-dada-pormarkdown-y0-y1-----------------------------z0-p_00-p_01-z1-p_10-p_11-para-esta-tabla-podemos-definir-tres-métricas-útiles---diferencia-de-riesgo-es-la-diferencia-de-probabilidades-condicionales-de-observar-y1-por-haber-asignado-el-tratamiento-z1-o-no-haberlo-asignado-z0.rd-py1z1---py1z0-fracp_11p_11-p_10---fracp_01p_01-p_00si-la-diferencia-es-positiva-entonces-es-más-probable-observar-y1-al-aplicar-el-tratamiento-z1-y-si-es-menor-entonces-al-no-aplicar-el-tratamiento-z0-hay-más-probabilidades-de-observar-y1.---ratio-de-riesgo-es-el-ratio-de-probabilidades-condicionales-de-observar-y1-dado-el-tratamiento-z1-o-el-control-z0rr-fracpy1z1py1z0-fracfracp_11p_11-p_10-fracp_01p_01-p_00si-el-ratio-es-mayor-a-1-entonces-bajo-tratamiento-es-más-probable-observar-y1-y-el-ratio-nos-dice-qué-tanto-en-relación-con-el-control.---razón-de-momios-mide-qué-tan-probable-es-observar-y1-contra-y0-bajo-tratamiento-contra-esa-misma-razón-sin-tratamientoor-fracpy1z1py0z1py1z0py0z0algo-que-hay-que-notar-es-que-si-z-e-y-son-independientes-entonces-rd0-rr-1.-y-or-1.-paradoja-de-yule-simpsonen-palabras-la-paradoja-de-yule-simpson-es-una-situación-que-se-presenta-cuando-una-relación-global-entre-dos-variables-cambia-de-dirección-cuando-se-tiene-en-consideración-una-segmentación-por-una-tercera-variable.-confusiónla-paradoja-de-yule-simpson-puede-observarse-por-confusión-es-decir-que-una-covariable-puede-afectar-al-tratamiento-y-a-la-respuesta.-por-ejemplo-digamos-que-se-quiere-investigar-el-efecto-del-tamaño-del-comercio-pequeño-o-grande-en-la-tasa-de-aceptación-de-pagos-con-tarjeta-es-decir-que-la-tarjeta-sea-aceptada-o-rechazada-medida-en-miles-de-operaciones.-para-este-análisis-se-crea-la-siguiente-tabla-de-contingenciamarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-98-12-110-89-grande-180-40-220-82-de-dicha-tabla-se-concluye-que-la-tasa-de-aceptación-es-peor-en-grandes-comercios.-sin-embargo-podemos-agregar-como-confusor-el-tipo-de-tarjeta-crédito-o-débito-se-realizan-más-operaciones-de-débito-en-comercios-pequeños-y-más-operaciones-de-tarjeta-de-crédito-en-comercios-grandes.-de-esta-forma-obtenemos-dos-tablas-de-contingencia-distintas-por-tipo-de-tarjetadébitomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-90-10-100-90-grande-18-2-20-90-créditomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-8-2-10-80-grande-162-38-200-81-en-ambas-tablas-puede-observarse-que-la-tasa-de-aceptación-es-mayor-en-comercios-grandes-por-lo-que-el-efecto-del-tratamiento-tamaño-del-comercio-se-invierte.en-el-caso-global-existe-confusión-ya-que-el-tipo-de-tarjeta-afecta-al-número-de-operaciones-hechas-en-cada-tipo-de-comercio-más-débito-en-comercios-pequeños-y-más-crédito-en-comercios-grandes.-de-esta-forma-no-es-posible-distinguir-el-efecto-del-tratamiento-tamaño-del-comercio-sobre-la-respuesta-tasa-de-aceptación-por-el-efecto-de-una-variable-adicional-tipo-de-tarjeta.de-esta-forma-si-definimos-x-in-1text-débito-0text-crédito-z-in-1text-comercio-grande-0text-comercio-chico-y-y-in-1text-completas-0text-rechazadas-podemos-definir-un-grafo-de-la-siguiente-formaimage.png-mediaciónahora-pensemos-en-una-situación-como-la-siguienteel-gobierno-busca-incrementar-el-número-de-créditos-otorgados-a-mujeres-mediante-una-política-pública-de-topar-las-tasas-de-interés-de-tarjetas-de-crédito-otorgadas-a-mujeres-a-tres-puntos-porcentuales-menor-que-la-de-tarjetas-de-crédito-otorgadas-a-hombres.-sin-embargo-es-posible-que-esta-política-tenga-un-efecto-sobre-el-score-crediticio-de-las-mujeres-ya-que-con-una-menor-tasa-las-mujeres-pagan-menos-intereses-y-con-esto-tienen-que-realizar-pagos-más-pequeños-reduciendo-su-probabilidad-de-impago.-esta-mejora-del-score-crediticio-puede-provocar-que-las-instituciones-financieras-quieran-ofrecer-más-créditos-a-mujeres.-en-este-caso-el-efecto-del-tratamiento-la-reducción-de-la-tasa-de-interés-sobre-la-respuesta-el-número-de-tarjetas-de-crédito-otorgadas-a-mujeres-puede-descomponerse-en-dos-en-un-efecto-directo-y-un-efecto-indirecto-de-la-mejora-del-score-crediticio-que-a-su-vez-tiene-un-efecto-sobre-el-número-de-tarjetas-de-crédito.en-este-caso-el-tratamiento-z-tiene-un-efecto-sobre-la-covariable-x-y-la-respuesta-y.-en-esta-situación-x-se-denomina-mediador.image-3.png-marcos-de-trabajo-de-inferencia-causallos-dos-marcos-de-trabajo-más-utilizados-en-inferencia-causal-son-el-marco-de-resultados-potenciales-y-el-marco-de-diagramas-causales.el-método-que-mayormente-se-utiliza-en-estos-notebooks-es-el-de-resultados-potenciales-por-lo-que-se-recomienda-ver-esos-notebooks-para-mayores-referencias.-diagramas-causales-pendiente" id="toc-introducción-distinción-entre-estadística-clásica-e-inferencia-causalla-mayor-parte-de-los-estudios-hechos-con-estadística-se-basan-en-la-búsqueda-de-métricas-de-asociación-más-que-en-la-búsqueda-de-relaciones-de-causalidad.-un-ejemplo-de-esta-construcción-de-métricas-es-el-coeficiente-de-correlación-de-pearson-o-spearman.estas-medidas-de-asociación-solo-cuantifican-cómo-dos-variables-digamos-x-e-y-se-mueven-juntas-ya-sea-por-una-causa-común-selección-o-azar-no-responden-a-una-pregunta-distinta-si-se-interviene-sobre-x-cambia-y-como-consecuenciapara-esto-se-debe-recurrir-al-uso-de-la-estadística-desde-otra-perspectiva-la-de-la-inferencia-causal-ya-que-nos-permite-introducir-un-lenguaje-formal-y-métodos-para-identificar-relaciones-causales-organizados-en-dos-grandes-bloques-estudios-aleatorizados-y-estudios-observacionales.la-inferencia-causal-permite-identificar-relaciones-causales-mediante-la-predicción-contrafactual-es-decir-estimar-lo-que-hubiera-pasado-a-la-variable-de-respuesta-y-de-unidades-bajo-estudio-si-hubiesen-sido-expuestas-a-otra-condición-o-intervención-el-contrafactual.contrafactual-palabra-que-significa-contrario-a-los-hechos.-en-inferencia-causal-se-refiere-al-escenario-que-se-hubiera-observado-si-se-hubiera-aplicado-una-intervención-distinta-a-la-que-se-aplicó.-inferencia-causal-elementos-necesariospara-poder-realizar-el-salto-entre-la-estadística-y-la-inferencia-causal-es-necesario-establecer-lo-siguiente.---un-marco-de-trabajo-donde-se-defina-qué-es-un-efecto-causal-bajo-escenarios-generales.---supuestos-bajo-los-cuales-se-pueda-declarar-o-identificar-causalidad.---evaluar-la-sensibilidad-de-los-supuestos-para-encontrar-formas-de-mitigar-la-fuerza-de-estos.-notacióntratamiento-denotado-como-z_i-para-la-unidad-bajo-estudio-i-y-vectorizado-como-z-para-todas-las-unidades-el-tratamiento-generalmente-es-un-vector-con-entradas-discretas-donde-cada-valor-se-refiere-a-un-tratamiento-en-específico.-por-ejemplo-en-un-tratamiento-binario-z_i-in-01-donde-generalmente-1-se-refiere-al-tratamiento-la-aplicación-de-una-medicina-en-un-estudio-clínico-una-política-de-reducción-de-tasas-de-interés-a-créditos-otorgados-a-mujeres-etc.-y-0-se-refiere-al-control-la-aplicación-de-un-placebo-o-no-aplicar-ninguna-política.respuesta-usualmente-se-denota-como-y_i-y-se-refiere-a-la-variable-de-interés-sobre-la-cuál-se-busca-encontrar-una-relación-causal-sobrevivencia-de-un-paciente-por-la-aplicación-de-una-medicina-número-de-créditos-otorgados-a-mujeres-etc..covariadas-y-confusores-las-covariadas-son-características-observadas-de-las-unidades-bajo-estudio-generalmente-denotadas-como-x_i-donde-x_i-puede-ser-un-vector-y-x-una-matriz.-un-subconjunto-de-estas-los-confusores-son-aquellas-que-afectan-tanto-la-asignación-al-tratamiento-z_i-como-la-variable-de-respuesta-y_i-y-por-ello-pueden-confundir-el-efecto-causal-estimado-por-ejemplo-comorbilidades-de-los-pacientes-en-un-estudio-clínico-o-la-predisposición-de-las-mujeres-a-obtener-créditos-en-el-sistema-financiero-formal.-cuando-las-covariables-no-son-observadas-pueden-denotarse-como-u_i-por-ejemplo-una-covariable-no-observada-podría-ser-una-enfermedad-no-diagnosticada-previa-o-el-nivel-de-ingreso-de-las-mujeres.-sesgosun-problema-de-los-estudios-causales-es-el-sesgo-el-cual-puede-provenir-de-las-siguientes-fuentes---confusión-es-posible-que-los-resultados-observados-sobre-la-variable-de-respuesta-y-no-sea-el-resultado-de-la-aplicación-de-un-tratamiento-sino-de-las-características-observadas-o-no-observadas-de-las-unidades-bajo-estudio.---selección-es-posible-que-la-asignación-de-los-tratamientos-no-provenga-de-un-proceso-de-aleatorización-sino-por-alguna-regla-distinta.-por-ejemplo-en-un-estudio-clínico-las-unidades-a-las-que-se-les-asigna-el-tratamiento-pueden-ser-personas-más-enfermas-o-que-una-política-de-reducción-de-tasas-de-interés-puede-asignarse-a-mujeres-bajo-la-percepción-de-que-este-grupo-tiene-menor-acceso-al-crédito-formal-cuando-en-realidad-esa-diferencia-no-existe-la-asignación-responde-a-una-creencia-no-a-un-proceso-aleatorizado.---medición-este-problema-ocurre-cuando-no-es-posible-medir-bien-las-características-y-respuestas-de-las-unidades-bajo-estudio.-por-ejemplo-el-ingreso-de-un-solicitante-de-crédito-puede-estar-mal-medido-porque-este-pudo-dar-una-cifra-superior-a-la-real-para-aumentar-la-probabilidad-de-otorgamiento.-confusiónel-mayor-problema-en-la-búsqueda-de-relaciones-causales-la-causa-la-confusión-ya-que-la-presencia-de-este-fenómeno-no-permite-distinguir-adecuadamente-el-efecto-de-un-tratamiento-z_i-sobre-la-variable-de-respuesta-y_i-del-efecto-de-las-covariadas-x_i.image-2.png-correlación-asociación-y-la-paradoja-de-yule-simpson-medidas-de-asociación---correlación-de-pearson-mide-el-grado-de-asociación-lineal-entre-dos-variables-x-e-yrho-xy-fractextcovxysqrttextvarxtextvary---regresión-lineal-simpley-alpha-beta-x-epsilony-puede-demostrarse-que-beta-es-igual-a-la-correlación-ajustada-por-la-desviación-estándarbeta-fractextcovxytextvarx-rho-xysqrtfractextvarxtextvary-tablas-de-contingenciauna-tabla-de-contingencia-es-una-tabla-de-frecuencias-sobre-dos-variables-de-interés.-consideremos-la-variable-de-respuesta-y-in-01-y-un-tratamiento-binario-z-in-01.-la-tabla-de-contingencia-está-dada-pormarkdown-y0-y1-----------------------------z0-p_00-p_01-z1-p_10-p_11-para-esta-tabla-podemos-definir-tres-métricas-útiles---diferencia-de-riesgo-es-la-diferencia-de-probabilidades-condicionales-de-observar-y1-por-haber-asignado-el-tratamiento-z1-o-no-haberlo-asignado-z0.rd-py1z1---py1z0-fracp_11p_11-p_10---fracp_01p_01-p_00si-la-diferencia-es-positiva-entonces-es-más-probable-observar-y1-al-aplicar-el-tratamiento-z1-y-si-es-menor-entonces-al-no-aplicar-el-tratamiento-z0-hay-más-probabilidades-de-observar-y1.---ratio-de-riesgo-es-el-ratio-de-probabilidades-condicionales-de-observar-y1-dado-el-tratamiento-z1-o-el-control-z0rr-fracpy1z1py1z0-fracfracp_11p_11-p_10-fracp_01p_01-p_00si-el-ratio-es-mayor-a-1-entonces-bajo-tratamiento-es-más-probable-observar-y1-y-el-ratio-nos-dice-qué-tanto-en-relación-con-el-control.---razón-de-momios-mide-qué-tan-probable-es-observar-y1-contra-y0-bajo-tratamiento-contra-esa-misma-razón-sin-tratamientoor-fracpy1z1py0z1py1z0py0z0algo-que-hay-que-notar-es-que-si-z-e-y-son-independientes-entonces-rd0-rr-1.-y-or-1.-paradoja-de-yule-simpsonen-palabras-la-paradoja-de-yule-simpson-es-una-situación-que-se-presenta-cuando-una-relación-global-entre-dos-variables-cambia-de-dirección-cuando-se-tiene-en-consideración-una-segmentación-por-una-tercera-variable.-confusiónla-paradoja-de-yule-simpson-puede-observarse-por-confusión-es-decir-que-una-covariable-puede-afectar-al-tratamiento-y-a-la-respuesta.-por-ejemplo-digamos-que-se-quiere-investigar-el-efecto-del-tamaño-del-comercio-pequeño-o-grande-en-la-tasa-de-aceptación-de-pagos-con-tarjeta-es-decir-que-la-tarjeta-sea-aceptada-o-rechazada-medida-en-miles-de-operaciones.-para-este-análisis-se-crea-la-siguiente-tabla-de-contingenciamarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-98-12-110-89-grande-180-40-220-82-de-dicha-tabla-se-concluye-que-la-tasa-de-aceptación-es-peor-en-grandes-comercios.-sin-embargo-podemos-agregar-como-confusor-el-tipo-de-tarjeta-crédito-o-débito-se-realizan-más-operaciones-de-débito-en-comercios-pequeños-y-más-operaciones-de-tarjeta-de-crédito-en-comercios-grandes.-de-esta-forma-obtenemos-dos-tablas-de-contingencia-distintas-por-tipo-de-tarjetadébitomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-90-10-100-90-grande-18-2-20-90-créditomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-8-2-10-80-grande-162-38-200-81-en-ambas-tablas-puede-observarse-que-la-tasa-de-aceptación-es-mayor-en-comercios-grandes-por-lo-que-el-efecto-del-tratamiento-tamaño-del-comercio-se-invierte.en-el-caso-global-existe-confusión-ya-que-el-tipo-de-tarjeta-afecta-al-número-de-operaciones-hechas-en-cada-tipo-de-comercio-más-débito-en-comercios-pequeños-y-más-crédito-en-comercios-grandes.-de-esta-forma-no-es-posible-distinguir-el-efecto-del-tratamiento-tamaño-del-comercio-sobre-la-respuesta-tasa-de-aceptación-por-el-efecto-de-una-variable-adicional-tipo-de-tarjeta.de-esta-forma-si-definimos-x-in-1text-débito-0text-crédito-z-in-1text-comercio-grande-0text-comercio-chico-y-y-in-1text-completas-0text-rechazadas-podemos-definir-un-grafo-de-la-siguiente-formaimage.png-mediaciónahora-pensemos-en-una-situación-como-la-siguienteel-gobierno-busca-incrementar-el-número-de-créditos-otorgados-a-mujeres-mediante-una-política-pública-de-topar-las-tasas-de-interés-de-tarjetas-de-crédito-otorgadas-a-mujeres-a-tres-puntos-porcentuales-menor-que-la-de-tarjetas-de-crédito-otorgadas-a-hombres.-sin-embargo-es-posible-que-esta-política-tenga-un-efecto-sobre-el-score-crediticio-de-las-mujeres-ya-que-con-una-menor-tasa-las-mujeres-pagan-menos-intereses-y-con-esto-tienen-que-realizar-pagos-más-pequeños-reduciendo-su-probabilidad-de-impago.-esta-mejora-del-score-crediticio-puede-provocar-que-las-instituciones-financieras-quieran-ofrecer-más-créditos-a-mujeres.-en-este-caso-el-efecto-del-tratamiento-la-reducción-de-la-tasa-de-interés-sobre-la-respuesta-el-número-de-tarjetas-de-crédito-otorgadas-a-mujeres-puede-descomponerse-en-dos-en-un-efecto-directo-y-un-efecto-indirecto-de-la-mejora-del-score-crediticio-que-a-su-vez-tiene-un-efecto-sobre-el-número-de-tarjetas-de-crédito.en-este-caso-el-tratamiento-z-tiene-un-efecto-sobre-la-covariable-x-y-la-respuesta-y.-en-esta-situación-x-se-denomina-mediador.image-3.png-marcos-de-trabajo-de-inferencia-causallos-dos-marcos-de-trabajo-más-utilizados-en-inferencia-causal-son-el-marco-de-resultados-potenciales-y-el-marco-de-diagramas-causales.el-método-que-mayormente-se-utiliza-en-estos-notebooks-es-el-de-resultados-potenciales-por-lo-que-se-recomienda-ver-esos-notebooks-para-mayores-referencias.-diagramas-causales-pendiente" class="nav-link active" data-scroll-target="#introducción-distinción-entre-estadística-clásica-e-inferencia-causalla-mayor-parte-de-los-estudios-hechos-con-estadística-se-basan-en-la-búsqueda-de-métricas-de-asociación-más-que-en-la-búsqueda-de-relaciones-de-causalidad.-un-ejemplo-de-esta-construcción-de-métricas-es-el-coeficiente-de-correlación-de-pearson-o-spearman.estas-medidas-de-asociación-solo-cuantifican-cómo-dos-variables-digamos-x-e-y-se-mueven-juntas-ya-sea-por-una-causa-común-selección-o-azar-no-responden-a-una-pregunta-distinta-si-se-interviene-sobre-x-cambia-y-como-consecuenciapara-esto-se-debe-recurrir-al-uso-de-la-estadística-desde-otra-perspectiva-la-de-la-inferencia-causal-ya-que-nos-permite-introducir-un-lenguaje-formal-y-métodos-para-identificar-relaciones-causales-organizados-en-dos-grandes-bloques-estudios-aleatorizados-y-estudios-observacionales.la-inferencia-causal-permite-identificar-relaciones-causales-mediante-la-predicción-contrafactual-es-decir-estimar-lo-que-hubiera-pasado-a-la-variable-de-respuesta-y-de-unidades-bajo-estudio-si-hubiesen-sido-expuestas-a-otra-condición-o-intervención-el-contrafactual.contrafactual-palabra-que-significa-contrario-a-los-hechos.-en-inferencia-causal-se-refiere-al-escenario-que-se-hubiera-observado-si-se-hubiera-aplicado-una-intervención-distinta-a-la-que-se-aplicó.-inferencia-causal-elementos-necesariospara-poder-realizar-el-salto-entre-la-estadística-y-la-inferencia-causal-es-necesario-establecer-lo-siguiente.---un-marco-de-trabajo-donde-se-defina-qué-es-un-efecto-causal-bajo-escenarios-generales.---supuestos-bajo-los-cuales-se-pueda-declarar-o-identificar-causalidad.---evaluar-la-sensibilidad-de-los-supuestos-para-encontrar-formas-de-mitigar-la-fuerza-de-estos.-notacióntratamiento-denotado-como-z_i-para-la-unidad-bajo-estudio-i-y-vectorizado-como-z-para-todas-las-unidades-el-tratamiento-generalmente-es-un-vector-con-entradas-discretas-donde-cada-valor-se-refiere-a-un-tratamiento-en-específico.-por-ejemplo-en-un-tratamiento-binario-z_i-in-01-donde-generalmente-1-se-refiere-al-tratamiento-la-aplicación-de-una-medicina-en-un-estudio-clínico-una-política-de-reducción-de-tasas-de-interés-a-créditos-otorgados-a-mujeres-etc.-y-0-se-refiere-al-control-la-aplicación-de-un-placebo-o-no-aplicar-ninguna-política.respuesta-usualmente-se-denota-como-y_i-y-se-refiere-a-la-variable-de-interés-sobre-la-cuál-se-busca-encontrar-una-relación-causal-sobrevivencia-de-un-paciente-por-la-aplicación-de-una-medicina-número-de-créditos-otorgados-a-mujeres-etc..covariadas-y-confusores-las-covariadas-son-características-observadas-de-las-unidades-bajo-estudio-generalmente-denotadas-como-x_i-donde-x_i-puede-ser-un-vector-y-x-una-matriz.-un-subconjunto-de-estas-los-confusores-son-aquellas-que-afectan-tanto-la-asignación-al-tratamiento-z_i-como-la-variable-de-respuesta-y_i-y-por-ello-pueden-confundir-el-efecto-causal-estimado-por-ejemplo-comorbilidades-de-los-pacientes-en-un-estudio-clínico-o-la-predisposición-de-las-mujeres-a-obtener-créditos-en-el-sistema-financiero-formal.-cuando-las-covariables-no-son-observadas-pueden-denotarse-como-u_i-por-ejemplo-una-covariable-no-observada-podría-ser-una-enfermedad-no-diagnosticada-previa-o-el-nivel-de-ingreso-de-las-mujeres.-sesgosun-problema-de-los-estudios-causales-es-el-sesgo-el-cual-puede-provenir-de-las-siguientes-fuentes---confusión-es-posible-que-los-resultados-observados-sobre-la-variable-de-respuesta-y-no-sea-el-resultado-de-la-aplicación-de-un-tratamiento-sino-de-las-características-observadas-o-no-observadas-de-las-unidades-bajo-estudio.---selección-es-posible-que-la-asignación-de-los-tratamientos-no-provenga-de-un-proceso-de-aleatorización-sino-por-alguna-regla-distinta.-por-ejemplo-en-un-estudio-clínico-las-unidades-a-las-que-se-les-asigna-el-tratamiento-pueden-ser-personas-más-enfermas-o-que-una-política-de-reducción-de-tasas-de-interés-puede-asignarse-a-mujeres-bajo-la-percepción-de-que-este-grupo-tiene-menor-acceso-al-crédito-formal-cuando-en-realidad-esa-diferencia-no-existe-la-asignación-responde-a-una-creencia-no-a-un-proceso-aleatorizado.---medición-este-problema-ocurre-cuando-no-es-posible-medir-bien-las-características-y-respuestas-de-las-unidades-bajo-estudio.-por-ejemplo-el-ingreso-de-un-solicitante-de-crédito-puede-estar-mal-medido-porque-este-pudo-dar-una-cifra-superior-a-la-real-para-aumentar-la-probabilidad-de-otorgamiento.-confusiónel-mayor-problema-en-la-búsqueda-de-relaciones-causales-la-causa-la-confusión-ya-que-la-presencia-de-este-fenómeno-no-permite-distinguir-adecuadamente-el-efecto-de-un-tratamiento-z_i-sobre-la-variable-de-respuesta-y_i-del-efecto-de-las-covariadas-x_i.image-2.png-correlación-asociación-y-la-paradoja-de-yule-simpson-medidas-de-asociación---correlación-de-pearson-mide-el-grado-de-asociación-lineal-entre-dos-variables-x-e-yrho-xy-fractextcovxysqrttextvarxtextvary---regresión-lineal-simpley-alpha-beta-x-epsilony-puede-demostrarse-que-beta-es-igual-a-la-correlación-ajustada-por-la-desviación-estándarbeta-fractextcovxytextvarx-rho-xysqrtfractextvarxtextvary-tablas-de-contingenciauna-tabla-de-contingencia-es-una-tabla-de-frecuencias-sobre-dos-variables-de-interés.-consideremos-la-variable-de-respuesta-y-in-01-y-un-tratamiento-binario-z-in-01.-la-tabla-de-contingencia-está-dada-pormarkdown-y0-y1-----------------------------z0-p_00-p_01-z1-p_10-p_11-para-esta-tabla-podemos-definir-tres-métricas-útiles---diferencia-de-riesgo-es-la-diferencia-de-probabilidades-condicionales-de-observar-y1-por-haber-asignado-el-tratamiento-z1-o-no-haberlo-asignado-z0.rd-py1z1---py1z0-fracp_11p_11-p_10---fracp_01p_01-p_00si-la-diferencia-es-positiva-entonces-es-más-probable-observar-y1-al-aplicar-el-tratamiento-z1-y-si-es-menor-entonces-al-no-aplicar-el-tratamiento-z0-hay-más-probabilidades-de-observar-y1.---ratio-de-riesgo-es-el-ratio-de-probabilidades-condicionales-de-observar-y1-dado-el-tratamiento-z1-o-el-control-z0rr-fracpy1z1py1z0-fracfracp_11p_11-p_10-fracp_01p_01-p_00si-el-ratio-es-mayor-a-1-entonces-bajo-tratamiento-es-más-probable-observar-y1-y-el-ratio-nos-dice-qué-tanto-en-relación-con-el-control.---razón-de-momios-mide-qué-tan-probable-es-observar-y1-contra-y0-bajo-tratamiento-contra-esa-misma-razón-sin-tratamientoor-fracpy1z1py0z1py1z0py0z0algo-que-hay-que-notar-es-que-si-z-e-y-son-independientes-entonces-rd0-rr-1.-y-or-1.-paradoja-de-yule-simpsonen-palabras-la-paradoja-de-yule-simpson-es-una-situación-que-se-presenta-cuando-una-relación-global-entre-dos-variables-cambia-de-dirección-cuando-se-tiene-en-consideración-una-segmentación-por-una-tercera-variable.-confusiónla-paradoja-de-yule-simpson-puede-observarse-por-confusión-es-decir-que-una-covariable-puede-afectar-al-tratamiento-y-a-la-respuesta.-por-ejemplo-digamos-que-se-quiere-investigar-el-efecto-del-tamaño-del-comercio-pequeño-o-grande-en-la-tasa-de-aceptación-de-pagos-con-tarjeta-es-decir-que-la-tarjeta-sea-aceptada-o-rechazada-medida-en-miles-de-operaciones.-para-este-análisis-se-crea-la-siguiente-tabla-de-contingenciamarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-98-12-110-89-grande-180-40-220-82-de-dicha-tabla-se-concluye-que-la-tasa-de-aceptación-es-peor-en-grandes-comercios.-sin-embargo-podemos-agregar-como-confusor-el-tipo-de-tarjeta-crédito-o-débito-se-realizan-más-operaciones-de-débito-en-comercios-pequeños-y-más-operaciones-de-tarjeta-de-crédito-en-comercios-grandes.-de-esta-forma-obtenemos-dos-tablas-de-contingencia-distintas-por-tipo-de-tarjetadébitomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-90-10-100-90-grande-18-2-20-90-créditomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-8-2-10-80-grande-162-38-200-81-en-ambas-tablas-puede-observarse-que-la-tasa-de-aceptación-es-mayor-en-comercios-grandes-por-lo-que-el-efecto-del-tratamiento-tamaño-del-comercio-se-invierte.en-el-caso-global-existe-confusión-ya-que-el-tipo-de-tarjeta-afecta-al-número-de-operaciones-hechas-en-cada-tipo-de-comercio-más-débito-en-comercios-pequeños-y-más-crédito-en-comercios-grandes.-de-esta-forma-no-es-posible-distinguir-el-efecto-del-tratamiento-tamaño-del-comercio-sobre-la-respuesta-tasa-de-aceptación-por-el-efecto-de-una-variable-adicional-tipo-de-tarjeta.de-esta-forma-si-definimos-x-in-1text-débito-0text-crédito-z-in-1text-comercio-grande-0text-comercio-chico-y-y-in-1text-completas-0text-rechazadas-podemos-definir-un-grafo-de-la-siguiente-formaimage.png-mediaciónahora-pensemos-en-una-situación-como-la-siguienteel-gobierno-busca-incrementar-el-número-de-créditos-otorgados-a-mujeres-mediante-una-política-pública-de-topar-las-tasas-de-interés-de-tarjetas-de-crédito-otorgadas-a-mujeres-a-tres-puntos-porcentuales-menor-que-la-de-tarjetas-de-crédito-otorgadas-a-hombres.-sin-embargo-es-posible-que-esta-política-tenga-un-efecto-sobre-el-score-crediticio-de-las-mujeres-ya-que-con-una-menor-tasa-las-mujeres-pagan-menos-intereses-y-con-esto-tienen-que-realizar-pagos-más-pequeños-reduciendo-su-probabilidad-de-impago.-esta-mejora-del-score-crediticio-puede-provocar-que-las-instituciones-financieras-quieran-ofrecer-más-créditos-a-mujeres.-en-este-caso-el-efecto-del-tratamiento-la-reducción-de-la-tasa-de-interés-sobre-la-respuesta-el-número-de-tarjetas-de-crédito-otorgadas-a-mujeres-puede-descomponerse-en-dos-en-un-efecto-directo-y-un-efecto-indirecto-de-la-mejora-del-score-crediticio-que-a-su-vez-tiene-un-efecto-sobre-el-número-de-tarjetas-de-crédito.en-este-caso-el-tratamiento-z-tiene-un-efecto-sobre-la-covariable-x-y-la-respuesta-y.-en-esta-situación-x-se-denomina-mediador.image-3.png-marcos-de-trabajo-de-inferencia-causallos-dos-marcos-de-trabajo-más-utilizados-en-inferencia-causal-son-el-marco-de-resultados-potenciales-y-el-marco-de-diagramas-causales.el-método-que-mayormente-se-utiliza-en-estos-notebooks-es-el-de-resultados-potenciales-por-lo-que-se-recomienda-ver-esos-notebooks-para-mayores-referencias.-diagramas-causales-pendiente">Introducción## Distinción entre Estadística Clásica e Inferencia CausalLa mayor parte de los estudios hechos con Estadística se basan en la búsqueda de métricas de asociación más que en la búsqueda de relaciones de causalidad. Un ejemplo de esta construcción de métricas es el coeficiente de correlación de Pearson o Spearman.Estas medidas de asociación solo cuantifican cómo dos variables, digamos <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, se mueven juntas — ya sea por una causa común, selección o azar — no responden a una pregunta distinta: si se interviene sobre <span class="math inline">\(X\)</span>, ¿cambia <span class="math inline">\(Y\)</span> como consecuencia?Para esto, se debe recurrir al uso de la Estadística desde otra perspectiva, la de la Inferencia Causal, ya que nos permite introducir un lenguaje formal y métodos para identificar relaciones causales, organizados en dos grandes bloques: estudios aleatorizados y estudios observacionales.La Inferencia Causal permite identificar relaciones causales mediante la <em>predicción contrafactual</em>, es decir, estimar lo que hubiera pasado a la variable de respuesta <span class="math inline">\(Y\)</span> de unidades bajo estudio si hubiesen sido expuestas a otra condición o intervención (el contrafactual).<em>Contrafactual</em>: Palabra que significa contrario a los hechos. En Inferencia Causal se refiere al escenario que se hubiera observado si se hubiera aplicado una intervención distinta a la que se aplicó.## Inferencia Causal#### Elementos necesariosPara poder realizar el salto entre la Estadística y la Inferencia Causal es necesario establecer lo siguiente. - Un marco de trabajo donde se defina qué es un efecto causal bajo escenarios generales. - Supuestos bajo los cuales se pueda declarar o identificar causalidad. - Evaluar la sensibilidad de los supuestos para encontrar formas de mitigar la fuerza de estos.### Notación<strong>Tratamiento</strong>: Denotado como <span class="math inline">\(Z_i\)</span> para la unidad bajo estudio <span class="math inline">\(i\)</span> y vectorizado como <span class="math inline">\(Z\)</span> para todas las unidades, el tratamiento generalmente es un vector con entradas discretas donde cada valor se refiere a un tratamiento en específico. Por ejemplo, en un tratamiento binario, <span class="math inline">\(Z_i \in \{0,1\}\)</span>, donde generalmente <span class="math inline">\(1\)</span> se refiere al tratamiento (la aplicación de una medicina en un estudio clínico, una política de reducción de tasas de interés a créditos otorgados a mujeres, etc.) y <span class="math inline">\(0\)</span> se refiere al control (la aplicación de un placebo o no aplicar ninguna política).<strong>Respuesta</strong>: Usualmente se denota como <span class="math inline">\(Y_i\)</span> y se refiere a la variable de interés sobre la cuál se busca encontrar una relación causal (sobrevivencia de un paciente por la aplicación de una medicina, número de créditos otorgados a mujeres, etc.).<strong>Covariadas y confusores</strong>: Las covariadas son características observadas de las unidades bajo estudio, generalmente denotadas como <span class="math inline">\(X_i\)</span> (donde <span class="math inline">\(X_i\)</span> puede ser un vector y <span class="math inline">\(X\)</span> una matriz). Un subconjunto de estas, los <strong>confusores</strong>, son aquellas que afectan tanto la asignación al tratamiento <span class="math inline">\(Z_i\)</span> como la variable de respuesta <span class="math inline">\(Y_i\)</span>, y por ello pueden “<em>confundir</em>” el efecto causal estimado (por ejemplo, comorbilidades de los pacientes en un estudio clínico o la predisposición de las mujeres a obtener créditos en el sistema financiero formal). Cuando las covariables no son observadas, pueden denotarse como <span class="math inline">\(U_i\)</span>, (por ejemplo, una covariable no observada podría ser una enfermedad no diagnosticada previa o el nivel de ingreso de las mujeres).### SesgosUn problema de los estudios causales es el sesgo, el cual puede provenir de las siguientes fuentes: - <strong>Confusión</strong>: Es posible que los resultados observados sobre la variable de respuesta <span class="math inline">\(Y\)</span> no sea el resultado de la aplicación de un tratamiento, sino de las características observadas o no observadas de las unidades bajo estudio. - <strong>Selección</strong>: Es posible que la asignación de los tratamientos no provenga de un proceso de aleatorización sino por alguna regla distinta. Por ejemplo, en un estudio clínico, las unidades a las que se les asigna el tratamiento pueden ser personas “más enfermas” o que una política de reducción de tasas de interés puede asignarse a mujeres bajo la percepción de que este grupo tiene menor acceso al crédito formal, cuando en realidad esa diferencia no existe — la asignación responde a una creencia, no a un proceso aleatorizado. - <strong>Medición</strong>: Este problema ocurre cuando no es posible medir bien las características y respuestas de las unidades bajo estudio. Por ejemplo, el ingreso de un solicitante de crédito puede estar mal medido porque este pudo dar una cifra superior a la real para aumentar la probabilidad de otorgamiento. ### ConfusiónEl mayor problema en la búsqueda de relaciones causales la causa la <em>confusión</em>, ya que la presencia de este fenómeno no permite distinguir adecuadamente el efecto de un tratamiento <span class="math inline">\(Z_i\)</span> sobre la variable de respuesta <span class="math inline">\(Y_i\)</span>, del efecto de las covariadas <span class="math inline">\(X_i\)</span>.<img src="01_introduccion_files/figure-html/ce811bd5-1-image-2.png" class="img-fluid" alt="image-2.png">## Correlación, asociación y la paradoja de Yule-Simpson### Medidas de asociación - Correlación de Pearson: Mide el grado de asociación lineal entre dos variables <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>:<span class="math display">\[\rho (X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\text{Var}(Y)}}\]</span> - Regresión lineal simple:<span class="math display">\[Y = \alpha + \beta X + \epsilon\]</span>y puede demostrarse que <span class="math inline">\(\beta\)</span> es igual a la correlación ajustada por la desviación estándar:<span class="math display">\[\beta = \frac{\text{Cov}(X,Y)}{\text{Var}(X)} = \rho (X,Y)\sqrt{\frac{\text{Var}(X)}{\text{Var}(Y)}}\]</span>### Tablas de contingenciaUna tabla de contingencia es una tabla de frecuencias sobre dos variables de interés. Consideremos la variable de respuesta <span class="math inline">\(Y \in {0,1}\)</span> y un tratamiento binario <span class="math inline">\(Z \in {0,1}\)</span>. La tabla de contingencia está dada por:<code>markdown|       | $Y=0$    | $Y=1$    ||-------|----------|----------|| $Z=0$ | $p_{00}$ | $p_{01}$ || $Z=1$ | $p_{10}$ | $p_{11}$ |</code>Para esta tabla podemos definir tres métricas útiles: - Diferencia de riesgo: Es la diferencia de probabilidades condicionales de observar <span class="math inline">\(Y=1\)</span> por haber asignado el tratamiento <span class="math inline">\(Z=1\)</span> o no haberlo asignado <span class="math inline">\(Z=0\)</span>.<span class="math display">\[RD = P(Y=1|Z=1) - P(Y=1|Z=0)= \frac{p_{11}}{p_{11}+ p_{10}} - \frac{p_{01}}{p_{01}+ p_{00}}\]</span>Si la diferencia es positiva, entonces es más probable observar <span class="math inline">\(Y=1\)</span> al aplicar el tratamiento <span class="math inline">\(Z=1\)</span>, y si es menor, entonces al no aplicar el tratamiento (<span class="math inline">\(Z=0\)</span>) hay más probabilidades de observar <span class="math inline">\(Y=1\)</span>. - Ratio de riesgo: es el ratio de probabilidades condicionales de observar <span class="math inline">\(Y=1\)</span> dado el tratamiento (<span class="math inline">\(Z=1\)</span>) o el control (<span class="math inline">\(Z=0\)</span>):<span class="math display">\[RR = \frac{P(Y=1|Z=1)}{P(Y=1|Z=0)}= \frac{\frac{p_{11}}{p_{11}+ p_{10}}} {\frac{p_{01}}{p_{01}+ p_{00}}}\]</span>Si el ratio es mayor a 1, entonces bajo tratamiento es más probable observar <span class="math inline">\(Y=1\)</span> y el ratio nos dice “qué tanto” en relación con el control. - Razón de momios: Mide qué tan probable es observar <span class="math inline">\(Y=1\)</span> contra <span class="math inline">\(Y=0\)</span> bajo tratamiento, contra esa misma razón sin tratamiento:<span class="math display">\[OR = \frac{P(Y=1|Z=1)/P(Y=0|Z=1)}{P(Y=1|Z=0)/P(Y=0|Z=0)}\]</span>Algo que hay que notar es que si <span class="math inline">\(Z\)</span> e <span class="math inline">\(Y\)</span> son independientes, entonces <span class="math inline">\(RD=0\)</span>, <span class="math inline">\(RR = 1\)</span>. y <span class="math inline">\(OR = 1\)</span>.## Paradoja de Yule-SimpsonEn palabras, la paradoja de Yule-Simpson es una situación que se presenta cuando una relación global entre dos variables cambia de dirección cuando se tiene en consideración una segmentación por una tercera variable. ### ConfusiónLa paradoja de Yule-Simpson puede observarse por confusión, es decir, que una covariable puede afectar al tratamiento y a la respuesta. Por ejemplo, digamos que se quiere investigar el efecto del tamaño del comercio (pequeño o grande) en la tasa de aceptación de pagos con tarjeta (es decir, que la tarjeta sea aceptada o rechazada), medida en miles de operaciones. Para este análisis, se crea la siguiente tabla de contingencia:<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 98        | 12         | 110   | 89%  || Grande   | 180       | 40         | 220   | 82%  |</code>De dicha tabla se concluye que la tasa de aceptación es peor en grandes comercios. Sin embargo, podemos agregar como confusor el tipo de tarjeta (crédito o débito): se realizan más operaciones de débito en comercios pequeños y más operaciones de tarjeta de crédito en comercios grandes. De esta forma obtenemos dos tablas de contingencia distintas por tipo de tarjeta:Débito<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 90        | 10         | 100   | 90%  || Grande   | 18        | 2          | 20    | 90%  |</code>Crédito<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 8         | 2          | 10    | 80%  || Grande   | 162       | 38         | 200   | 81%  |</code>En ambas tablas puede observarse que la tasa de aceptación es mayor en comercios grandes, por lo que el efecto del tratamiento (tamaño del comercio) se invierte.En el caso global existe <em>confusión</em>, ya que el tipo de tarjeta afecta al número de operaciones hechas en cada tipo de comercio (más débito en comercios pequeños y más crédito en comercios grandes). De esta forma, no es posible distinguir el efecto del tratamiento (tamaño del comercio) sobre la respuesta (tasa de aceptación) por el efecto de una variable adicional (tipo de tarjeta).De esta forma, si definimos <span class="math inline">\(X \in \{1=\text{ débito}, 0=\text{ crédito}\}\)</span>, <span class="math inline">\(Z \in \{1=\text{ comercio grande}, 0=\text{ comercio chico}\}\)</span> y <span class="math inline">\(Y \in \{1=\text{ Completas}, 0=\text{ Rechazadas}\}\)</span>, podemos definir un grafo de la siguiente forma:<img src="01_introduccion_files/figure-html/ce811bd5-3-image.png" class="img-fluid" alt="image.png">### MediaciónAhora pensemos en una situación como la siguiente:El gobierno busca incrementar el número de créditos otorgados a mujeres mediante una política pública de topar las tasas de interés de tarjetas de crédito otorgadas a mujeres a tres puntos porcentuales menor que la de tarjetas de crédito otorgadas a hombres. Sin embargo, es posible que esta política tenga un efecto sobre el score crediticio de las mujeres, ya que con una menor tasa, las mujeres pagan menos intereses y, con esto, tienen que realizar pagos más pequeños, reduciendo su probabilidad de impago. Esta mejora del score crediticio puede provocar que las instituciones financieras quieran ofrecer más créditos a mujeres. En este caso, el efecto del tratamiento (la reducción de la tasa de interés) sobre la respuesta (el número de tarjetas de crédito otorgadas a mujeres), puede descomponerse en dos, en un efecto directo y un efecto indirecto de la mejora del score crediticio que a su vez tiene un efecto sobre el número de tarjetas de crédito.En este caso, el tratamiento <span class="math inline">\(Z\)</span> tiene un efecto sobre la covariable <span class="math inline">\(X\)</span> y la respuesta <span class="math inline">\(Y\)</span>. En esta situación, <span class="math inline">\(X\)</span> se denomina <em>mediador</em>.<img src="01_introduccion_files/figure-html/ce811bd5-2-image-3.png" class="img-fluid" alt="image-3.png">## Marcos de trabajo de inferencia causalLos dos marcos de trabajo más utilizados en Inferencia Causal son el marco de <em>resultados potenciales</em> y el marco de <em>diagramas causales</em>.El método que mayormente se utiliza en estos notebooks es el de resultados potenciales por lo que se recomienda ver esos notebooks para mayores referencias.### Diagramas causales (pendiente)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Introducción</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Causal Inference</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Introducción a la inferencia causal
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción-distinción-entre-estadística-clásica-e-inferencia-causalla-mayor-parte-de-los-estudios-hechos-con-estadística-se-basan-en-la-búsqueda-de-métricas-de-asociación-más-que-en-la-búsqueda-de-relaciones-de-causalidad.-un-ejemplo-de-esta-construcción-de-métricas-es-el-coeficiente-de-correlación-de-pearson-o-spearman.estas-medidas-de-asociación-solo-cuantifican-cómo-dos-variables-digamos-x-e-y-se-mueven-juntas-ya-sea-por-una-causa-común-selección-o-azar-no-responden-a-una-pregunta-distinta-si-se-interviene-sobre-x-cambia-y-como-consecuenciapara-esto-se-debe-recurrir-al-uso-de-la-estadística-desde-otra-perspectiva-la-de-la-inferencia-causal-ya-que-nos-permite-introducir-un-lenguaje-formal-y-métodos-para-identificar-relaciones-causales-organizados-en-dos-grandes-bloques-estudios-aleatorizados-y-estudios-observacionales.la-inferencia-causal-permite-identificar-relaciones-causales-mediante-la-predicción-contrafactual-es-decir-estimar-lo-que-hubiera-pasado-a-la-variable-de-respuesta-y-de-unidades-bajo-estudio-si-hubiesen-sido-expuestas-a-otra-condición-o-intervención-el-contrafactual.contrafactual-palabra-que-significa-contrario-a-los-hechos.-en-inferencia-causal-se-refiere-al-escenario-que-se-hubiera-observado-si-se-hubiera-aplicado-una-intervención-distinta-a-la-que-se-aplicó.-inferencia-causal-elementos-necesariospara-poder-realizar-el-salto-entre-la-estadística-y-la-inferencia-causal-es-necesario-establecer-lo-siguiente.---un-marco-de-trabajo-donde-se-defina-qué-es-un-efecto-causal-bajo-escenarios-generales.---supuestos-bajo-los-cuales-se-pueda-declarar-o-identificar-causalidad.---evaluar-la-sensibilidad-de-los-supuestos-para-encontrar-formas-de-mitigar-la-fuerza-de-estos.-notacióntratamiento-denotado-como-z_i-para-la-unidad-bajo-estudio-i-y-vectorizado-como-z-para-todas-las-unidades-el-tratamiento-generalmente-es-un-vector-con-entradas-discretas-donde-cada-valor-se-refiere-a-un-tratamiento-en-específico.-por-ejemplo-en-un-tratamiento-binario-z_i-in-01-donde-generalmente-1-se-refiere-al-tratamiento-la-aplicación-de-una-medicina-en-un-estudio-clínico-una-política-de-reducción-de-tasas-de-interés-a-créditos-otorgados-a-mujeres-etc.-y-0-se-refiere-al-control-la-aplicación-de-un-placebo-o-no-aplicar-ninguna-política.respuesta-usualmente-se-denota-como-y_i-y-se-refiere-a-la-variable-de-interés-sobre-la-cuál-se-busca-encontrar-una-relación-causal-sobrevivencia-de-un-paciente-por-la-aplicación-de-una-medicina-número-de-créditos-otorgados-a-mujeres-etc..covariadas-y-confusores-las-covariadas-son-características-observadas-de-las-unidades-bajo-estudio-generalmente-denotadas-como-x_i-donde-x_i-puede-ser-un-vector-y-x-una-matriz.-un-subconjunto-de-estas-los-confusores-son-aquellas-que-afectan-tanto-la-asignación-al-tratamiento-z_i-como-la-variable-de-respuesta-y_i-y-por-ello-pueden-confundir-el-efecto-causal-estimado-por-ejemplo-comorbilidades-de-los-pacientes-en-un-estudio-clínico-o-la-predisposición-de-las-mujeres-a-obtener-créditos-en-el-sistema-financiero-formal.-cuando-las-covariables-no-son-observadas-pueden-denotarse-como-u_i-por-ejemplo-una-covariable-no-observada-podría-ser-una-enfermedad-no-diagnosticada-previa-o-el-nivel-de-ingreso-de-las-mujeres.-sesgosun-problema-de-los-estudios-causales-es-el-sesgo-el-cual-puede-provenir-de-las-siguientes-fuentes---confusión-es-posible-que-los-resultados-observados-sobre-la-variable-de-respuesta-y-no-sea-el-resultado-de-la-aplicación-de-un-tratamiento-sino-de-las-características-observadas-o-no-observadas-de-las-unidades-bajo-estudio.---selección-es-posible-que-la-asignación-de-los-tratamientos-no-provenga-de-un-proceso-de-aleatorización-sino-por-alguna-regla-distinta.-por-ejemplo-en-un-estudio-clínico-las-unidades-a-las-que-se-les-asigna-el-tratamiento-pueden-ser-personas-más-enfermas-o-que-una-política-de-reducción-de-tasas-de-interés-puede-asignarse-a-mujeres-bajo-la-percepción-de-que-este-grupo-tiene-menor-acceso-al-crédito-formal-cuando-en-realidad-esa-diferencia-no-existe-la-asignación-responde-a-una-creencia-no-a-un-proceso-aleatorizado.---medición-este-problema-ocurre-cuando-no-es-posible-medir-bien-las-características-y-respuestas-de-las-unidades-bajo-estudio.-por-ejemplo-el-ingreso-de-un-solicitante-de-crédito-puede-estar-mal-medido-porque-este-pudo-dar-una-cifra-superior-a-la-real-para-aumentar-la-probabilidad-de-otorgamiento.-confusiónel-mayor-problema-en-la-búsqueda-de-relaciones-causales-la-causa-la-confusión-ya-que-la-presencia-de-este-fenómeno-no-permite-distinguir-adecuadamente-el-efecto-de-un-tratamiento-z_i-sobre-la-variable-de-respuesta-y_i-del-efecto-de-las-covariadas-x_i.image-2.png-correlación-asociación-y-la-paradoja-de-yule-simpson-medidas-de-asociación---correlación-de-pearson-mide-el-grado-de-asociación-lineal-entre-dos-variables-x-e-yrho-xy-fractextcovxysqrttextvarxtextvary---regresión-lineal-simpley-alpha-beta-x-epsilony-puede-demostrarse-que-beta-es-igual-a-la-correlación-ajustada-por-la-desviación-estándarbeta-fractextcovxytextvarx-rho-xysqrtfractextvarxtextvary-tablas-de-contingenciauna-tabla-de-contingencia-es-una-tabla-de-frecuencias-sobre-dos-variables-de-interés.-consideremos-la-variable-de-respuesta-y-in-01-y-un-tratamiento-binario-z-in-01.-la-tabla-de-contingencia-está-dada-pormarkdown-y0-y1-----------------------------z0-p_00-p_01-z1-p_10-p_11-para-esta-tabla-podemos-definir-tres-métricas-útiles---diferencia-de-riesgo-es-la-diferencia-de-probabilidades-condicionales-de-observar-y1-por-haber-asignado-el-tratamiento-z1-o-no-haberlo-asignado-z0.rd-py1z1---py1z0-fracp_11p_11-p_10---fracp_01p_01-p_00si-la-diferencia-es-positiva-entonces-es-más-probable-observar-y1-al-aplicar-el-tratamiento-z1-y-si-es-menor-entonces-al-no-aplicar-el-tratamiento-z0-hay-más-probabilidades-de-observar-y1.---ratio-de-riesgo-es-el-ratio-de-probabilidades-condicionales-de-observar-y1-dado-el-tratamiento-z1-o-el-control-z0rr-fracpy1z1py1z0-fracfracp_11p_11-p_10-fracp_01p_01-p_00si-el-ratio-es-mayor-a-1-entonces-bajo-tratamiento-es-más-probable-observar-y1-y-el-ratio-nos-dice-qué-tanto-en-relación-con-el-control.---razón-de-momios-mide-qué-tan-probable-es-observar-y1-contra-y0-bajo-tratamiento-contra-esa-misma-razón-sin-tratamientoor-fracpy1z1py0z1py1z0py0z0algo-que-hay-que-notar-es-que-si-z-e-y-son-independientes-entonces-rd0-rr-1.-y-or-1.-paradoja-de-yule-simpsonen-palabras-la-paradoja-de-yule-simpson-es-una-situación-que-se-presenta-cuando-una-relación-global-entre-dos-variables-cambia-de-dirección-cuando-se-tiene-en-consideración-una-segmentación-por-una-tercera-variable.-confusiónla-paradoja-de-yule-simpson-puede-observarse-por-confusión-es-decir-que-una-covariable-puede-afectar-al-tratamiento-y-a-la-respuesta.-por-ejemplo-digamos-que-se-quiere-investigar-el-efecto-del-tamaño-del-comercio-pequeño-o-grande-en-la-tasa-de-aceptación-de-pagos-con-tarjeta-es-decir-que-la-tarjeta-sea-aceptada-o-rechazada-medida-en-miles-de-operaciones.-para-este-análisis-se-crea-la-siguiente-tabla-de-contingenciamarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-98-12-110-89-grande-180-40-220-82-de-dicha-tabla-se-concluye-que-la-tasa-de-aceptación-es-peor-en-grandes-comercios.-sin-embargo-podemos-agregar-como-confusor-el-tipo-de-tarjeta-crédito-o-débito-se-realizan-más-operaciones-de-débito-en-comercios-pequeños-y-más-operaciones-de-tarjeta-de-crédito-en-comercios-grandes.-de-esta-forma-obtenemos-dos-tablas-de-contingencia-distintas-por-tipo-de-tarjetadébitomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-90-10-100-90-grande-18-2-20-90-créditomarkdown-completas-rechazadas-total-tasa------------------------------------------------pequeño-8-2-10-80-grande-162-38-200-81-en-ambas-tablas-puede-observarse-que-la-tasa-de-aceptación-es-mayor-en-comercios-grandes-por-lo-que-el-efecto-del-tratamiento-tamaño-del-comercio-se-invierte.en-el-caso-global-existe-confusión-ya-que-el-tipo-de-tarjeta-afecta-al-número-de-operaciones-hechas-en-cada-tipo-de-comercio-más-débito-en-comercios-pequeños-y-más-crédito-en-comercios-grandes.-de-esta-forma-no-es-posible-distinguir-el-efecto-del-tratamiento-tamaño-del-comercio-sobre-la-respuesta-tasa-de-aceptación-por-el-efecto-de-una-variable-adicional-tipo-de-tarjeta.de-esta-forma-si-definimos-x-in-1text-débito-0text-crédito-z-in-1text-comercio-grande-0text-comercio-chico-y-y-in-1text-completas-0text-rechazadas-podemos-definir-un-grafo-de-la-siguiente-formaimage.png-mediaciónahora-pensemos-en-una-situación-como-la-siguienteel-gobierno-busca-incrementar-el-número-de-créditos-otorgados-a-mujeres-mediante-una-política-pública-de-topar-las-tasas-de-interés-de-tarjetas-de-crédito-otorgadas-a-mujeres-a-tres-puntos-porcentuales-menor-que-la-de-tarjetas-de-crédito-otorgadas-a-hombres.-sin-embargo-es-posible-que-esta-política-tenga-un-efecto-sobre-el-score-crediticio-de-las-mujeres-ya-que-con-una-menor-tasa-las-mujeres-pagan-menos-intereses-y-con-esto-tienen-que-realizar-pagos-más-pequeños-reduciendo-su-probabilidad-de-impago.-esta-mejora-del-score-crediticio-puede-provocar-que-las-instituciones-financieras-quieran-ofrecer-más-créditos-a-mujeres.-en-este-caso-el-efecto-del-tratamiento-la-reducción-de-la-tasa-de-interés-sobre-la-respuesta-el-número-de-tarjetas-de-crédito-otorgadas-a-mujeres-puede-descomponerse-en-dos-en-un-efecto-directo-y-un-efecto-indirecto-de-la-mejora-del-score-crediticio-que-a-su-vez-tiene-un-efecto-sobre-el-número-de-tarjetas-de-crédito.en-este-caso-el-tratamiento-z-tiene-un-efecto-sobre-la-covariable-x-y-la-respuesta-y.-en-esta-situación-x-se-denomina-mediador.image-3.png-marcos-de-trabajo-de-inferencia-causallos-dos-marcos-de-trabajo-más-utilizados-en-inferencia-causal-son-el-marco-de-resultados-potenciales-y-el-marco-de-diagramas-causales.el-método-que-mayormente-se-utiliza-en-estos-notebooks-es-el-de-resultados-potenciales-por-lo-que-se-recomienda-ver-esos-notebooks-para-mayores-referencias.-diagramas-causales-pendiente" class="level1">
+<h1>Introducción## Distinción entre Estadística Clásica e Inferencia CausalLa mayor parte de los estudios hechos con Estadística se basan en la búsqueda de métricas de asociación más que en la búsqueda de relaciones de causalidad. Un ejemplo de esta construcción de métricas es el coeficiente de correlación de Pearson o Spearman.Estas medidas de asociación solo cuantifican cómo dos variables, digamos <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, se mueven juntas — ya sea por una causa común, selección o azar — no responden a una pregunta distinta: si se interviene sobre <span class="math inline">\(X\)</span>, ¿cambia <span class="math inline">\(Y\)</span> como consecuencia?Para esto, se debe recurrir al uso de la Estadística desde otra perspectiva, la de la Inferencia Causal, ya que nos permite introducir un lenguaje formal y métodos para identificar relaciones causales, organizados en dos grandes bloques: estudios aleatorizados y estudios observacionales.La Inferencia Causal permite identificar relaciones causales mediante la <em>predicción contrafactual</em>, es decir, estimar lo que hubiera pasado a la variable de respuesta <span class="math inline">\(Y\)</span> de unidades bajo estudio si hubiesen sido expuestas a otra condición o intervención (el contrafactual).<em>Contrafactual</em>: Palabra que significa contrario a los hechos. En Inferencia Causal se refiere al escenario que se hubiera observado si se hubiera aplicado una intervención distinta a la que se aplicó.## Inferencia Causal#### Elementos necesariosPara poder realizar el salto entre la Estadística y la Inferencia Causal es necesario establecer lo siguiente. - Un marco de trabajo donde se defina qué es un efecto causal bajo escenarios generales. - Supuestos bajo los cuales se pueda declarar o identificar causalidad. - Evaluar la sensibilidad de los supuestos para encontrar formas de mitigar la fuerza de estos.### Notación<strong>Tratamiento</strong>: Denotado como <span class="math inline">\(Z_i\)</span> para la unidad bajo estudio <span class="math inline">\(i\)</span> y vectorizado como <span class="math inline">\(Z\)</span> para todas las unidades, el tratamiento generalmente es un vector con entradas discretas donde cada valor se refiere a un tratamiento en específico. Por ejemplo, en un tratamiento binario, <span class="math inline">\(Z_i \in \{0,1\}\)</span>, donde generalmente <span class="math inline">\(1\)</span> se refiere al tratamiento (la aplicación de una medicina en un estudio clínico, una política de reducción de tasas de interés a créditos otorgados a mujeres, etc.) y <span class="math inline">\(0\)</span> se refiere al control (la aplicación de un placebo o no aplicar ninguna política).<strong>Respuesta</strong>: Usualmente se denota como <span class="math inline">\(Y_i\)</span> y se refiere a la variable de interés sobre la cuál se busca encontrar una relación causal (sobrevivencia de un paciente por la aplicación de una medicina, número de créditos otorgados a mujeres, etc.).<strong>Covariadas y confusores</strong>: Las covariadas son características observadas de las unidades bajo estudio, generalmente denotadas como <span class="math inline">\(X_i\)</span> (donde <span class="math inline">\(X_i\)</span> puede ser un vector y <span class="math inline">\(X\)</span> una matriz). Un subconjunto de estas, los <strong>confusores</strong>, son aquellas que afectan tanto la asignación al tratamiento <span class="math inline">\(Z_i\)</span> como la variable de respuesta <span class="math inline">\(Y_i\)</span>, y por ello pueden “<em>confundir</em>” el efecto causal estimado (por ejemplo, comorbilidades de los pacientes en un estudio clínico o la predisposición de las mujeres a obtener créditos en el sistema financiero formal). Cuando las covariables no son observadas, pueden denotarse como <span class="math inline">\(U_i\)</span>, (por ejemplo, una covariable no observada podría ser una enfermedad no diagnosticada previa o el nivel de ingreso de las mujeres).### SesgosUn problema de los estudios causales es el sesgo, el cual puede provenir de las siguientes fuentes: - <strong>Confusión</strong>: Es posible que los resultados observados sobre la variable de respuesta <span class="math inline">\(Y\)</span> no sea el resultado de la aplicación de un tratamiento, sino de las características observadas o no observadas de las unidades bajo estudio. - <strong>Selección</strong>: Es posible que la asignación de los tratamientos no provenga de un proceso de aleatorización sino por alguna regla distinta. Por ejemplo, en un estudio clínico, las unidades a las que se les asigna el tratamiento pueden ser personas “más enfermas” o que una política de reducción de tasas de interés puede asignarse a mujeres bajo la percepción de que este grupo tiene menor acceso al crédito formal, cuando en realidad esa diferencia no existe — la asignación responde a una creencia, no a un proceso aleatorizado. - <strong>Medición</strong>: Este problema ocurre cuando no es posible medir bien las características y respuestas de las unidades bajo estudio. Por ejemplo, el ingreso de un solicitante de crédito puede estar mal medido porque este pudo dar una cifra superior a la real para aumentar la probabilidad de otorgamiento. ### ConfusiónEl mayor problema en la búsqueda de relaciones causales la causa la <em>confusión</em>, ya que la presencia de este fenómeno no permite distinguir adecuadamente el efecto de un tratamiento <span class="math inline">\(Z_i\)</span> sobre la variable de respuesta <span class="math inline">\(Y_i\)</span>, del efecto de las covariadas <span class="math inline">\(X_i\)</span>.<img src="01_introduccion_files/figure-html/ce811bd5-1-image-2.png" class="img-fluid" alt="image-2.png">## Correlación, asociación y la paradoja de Yule-Simpson### Medidas de asociación - Correlación de Pearson: Mide el grado de asociación lineal entre dos variables <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>:<span class="math display">\[\rho (X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\text{Var}(Y)}}\]</span> - Regresión lineal simple:<span class="math display">\[Y = \alpha + \beta X + \epsilon\]</span>y puede demostrarse que <span class="math inline">\(\beta\)</span> es igual a la correlación ajustada por la desviación estándar:<span class="math display">\[\beta = \frac{\text{Cov}(X,Y)}{\text{Var}(X)} = \rho (X,Y)\sqrt{\frac{\text{Var}(X)}{\text{Var}(Y)}}\]</span>### Tablas de contingenciaUna tabla de contingencia es una tabla de frecuencias sobre dos variables de interés. Consideremos la variable de respuesta <span class="math inline">\(Y \in {0,1}\)</span> y un tratamiento binario <span class="math inline">\(Z \in {0,1}\)</span>. La tabla de contingencia está dada por:<code>markdown|       | $Y=0$    | $Y=1$    ||-------|----------|----------|| $Z=0$ | $p_{00}$ | $p_{01}$ || $Z=1$ | $p_{10}$ | $p_{11}$ |</code>Para esta tabla podemos definir tres métricas útiles: - Diferencia de riesgo: Es la diferencia de probabilidades condicionales de observar <span class="math inline">\(Y=1\)</span> por haber asignado el tratamiento <span class="math inline">\(Z=1\)</span> o no haberlo asignado <span class="math inline">\(Z=0\)</span>.<span class="math display">\[RD = P(Y=1|Z=1) - P(Y=1|Z=0)= \frac{p_{11}}{p_{11}+ p_{10}} - \frac{p_{01}}{p_{01}+ p_{00}}\]</span>Si la diferencia es positiva, entonces es más probable observar <span class="math inline">\(Y=1\)</span> al aplicar el tratamiento <span class="math inline">\(Z=1\)</span>, y si es menor, entonces al no aplicar el tratamiento (<span class="math inline">\(Z=0\)</span>) hay más probabilidades de observar <span class="math inline">\(Y=1\)</span>. - Ratio de riesgo: es el ratio de probabilidades condicionales de observar <span class="math inline">\(Y=1\)</span> dado el tratamiento (<span class="math inline">\(Z=1\)</span>) o el control (<span class="math inline">\(Z=0\)</span>):<span class="math display">\[RR = \frac{P(Y=1|Z=1)}{P(Y=1|Z=0)}= \frac{\frac{p_{11}}{p_{11}+ p_{10}}} {\frac{p_{01}}{p_{01}+ p_{00}}}\]</span>Si el ratio es mayor a 1, entonces bajo tratamiento es más probable observar <span class="math inline">\(Y=1\)</span> y el ratio nos dice “qué tanto” en relación con el control. - Razón de momios: Mide qué tan probable es observar <span class="math inline">\(Y=1\)</span> contra <span class="math inline">\(Y=0\)</span> bajo tratamiento, contra esa misma razón sin tratamiento:<span class="math display">\[OR = \frac{P(Y=1|Z=1)/P(Y=0|Z=1)}{P(Y=1|Z=0)/P(Y=0|Z=0)}\]</span>Algo que hay que notar es que si <span class="math inline">\(Z\)</span> e <span class="math inline">\(Y\)</span> son independientes, entonces <span class="math inline">\(RD=0\)</span>, <span class="math inline">\(RR = 1\)</span>. y <span class="math inline">\(OR = 1\)</span>.## Paradoja de Yule-SimpsonEn palabras, la paradoja de Yule-Simpson es una situación que se presenta cuando una relación global entre dos variables cambia de dirección cuando se tiene en consideración una segmentación por una tercera variable. ### ConfusiónLa paradoja de Yule-Simpson puede observarse por confusión, es decir, que una covariable puede afectar al tratamiento y a la respuesta. Por ejemplo, digamos que se quiere investigar el efecto del tamaño del comercio (pequeño o grande) en la tasa de aceptación de pagos con tarjeta (es decir, que la tarjeta sea aceptada o rechazada), medida en miles de operaciones. Para este análisis, se crea la siguiente tabla de contingencia:<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 98        | 12         | 110   | 89%  || Grande   | 180       | 40         | 220   | 82%  |</code>De dicha tabla se concluye que la tasa de aceptación es peor en grandes comercios. Sin embargo, podemos agregar como confusor el tipo de tarjeta (crédito o débito): se realizan más operaciones de débito en comercios pequeños y más operaciones de tarjeta de crédito en comercios grandes. De esta forma obtenemos dos tablas de contingencia distintas por tipo de tarjeta:Débito<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 90        | 10         | 100   | 90%  || Grande   | 18        | 2          | 20    | 90%  |</code>Crédito<code>markdown|          | Completas | Rechazadas | Total | Tasa ||----------|-----------|------------|-------|------|| Pequeño  | 8         | 2          | 10    | 80%  || Grande   | 162       | 38         | 200   | 81%  |</code>En ambas tablas puede observarse que la tasa de aceptación es mayor en comercios grandes, por lo que el efecto del tratamiento (tamaño del comercio) se invierte.En el caso global existe <em>confusión</em>, ya que el tipo de tarjeta afecta al número de operaciones hechas en cada tipo de comercio (más débito en comercios pequeños y más crédito en comercios grandes). De esta forma, no es posible distinguir el efecto del tratamiento (tamaño del comercio) sobre la respuesta (tasa de aceptación) por el efecto de una variable adicional (tipo de tarjeta).De esta forma, si definimos <span class="math inline">\(X \in \{1=\text{ débito}, 0=\text{ crédito}\}\)</span>, <span class="math inline">\(Z \in \{1=\text{ comercio grande}, 0=\text{ comercio chico}\}\)</span> y <span class="math inline">\(Y \in \{1=\text{ Completas}, 0=\text{ Rechazadas}\}\)</span>, podemos definir un grafo de la siguiente forma:<img src="01_introduccion_files/figure-html/ce811bd5-3-image.png" class="img-fluid" alt="image.png">### MediaciónAhora pensemos en una situación como la siguiente:El gobierno busca incrementar el número de créditos otorgados a mujeres mediante una política pública de topar las tasas de interés de tarjetas de crédito otorgadas a mujeres a tres puntos porcentuales menor que la de tarjetas de crédito otorgadas a hombres. Sin embargo, es posible que esta política tenga un efecto sobre el score crediticio de las mujeres, ya que con una menor tasa, las mujeres pagan menos intereses y, con esto, tienen que realizar pagos más pequeños, reduciendo su probabilidad de impago. Esta mejora del score crediticio puede provocar que las instituciones financieras quieran ofrecer más créditos a mujeres. En este caso, el efecto del tratamiento (la reducción de la tasa de interés) sobre la respuesta (el número de tarjetas de crédito otorgadas a mujeres), puede descomponerse en dos, en un efecto directo y un efecto indirecto de la mejora del score crediticio que a su vez tiene un efecto sobre el número de tarjetas de crédito.En este caso, el tratamiento <span class="math inline">\(Z\)</span> tiene un efecto sobre la covariable <span class="math inline">\(X\)</span> y la respuesta <span class="math inline">\(Y\)</span>. En esta situación, <span class="math inline">\(X\)</span> se denomina <em>mediador</em>.<img src="01_introduccion_files/figure-html/ce811bd5-2-image-3.png" class="img-fluid" alt="image-3.png">## Marcos de trabajo de inferencia causalLos dos marcos de trabajo más utilizados en Inferencia Causal son el marco de <em>resultados potenciales</em> y el marco de <em>diagramas causales</em>.El método que mayormente se utiliza en estos notebooks es el de resultados potenciales por lo que se recomienda ver esos notebooks para mayores referencias.### Diagramas causales (pendiente)</h1>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

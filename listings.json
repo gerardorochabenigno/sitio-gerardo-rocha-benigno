@@ -1,7 +1,13 @@
 [
   {
-    "listing": "/notes/causal-inference/index.html",
-    "items": []
+    "listing": "/notes/index.html",
+    "items": [
+      "/notes/causal-inference/01_introduccion.html",
+      "/notes/causal-inference/02_resultados_potenciales.html",
+      "/notes/causal-inference/03_cre_y_frt.html",
+      "/notes/causal-inference/04_inferencia_neymaniana_cre.html",
+      "/notes/causal-inference/05_estratificacion_y_postestratificación.html"
+    ]
   },
   {
     "listing": "/proyectos.html",
@@ -10,12 +16,7 @@
     ]
   },
   {
-    "listing": "/notes/index.html",
-    "items": [
-      "/notes/causal-inference/02_resultados_potenciales.html",
-      "/notes/causal-inference/03_cre_y_frt.html",
-      "/notes/causal-inference/04_inferencia_neymaniana_cre.html",
-      "/notes/causal-inference/05_estratificacion_y_postestratificación.html"
-    ]
+    "listing": "/notes/causal-inference/index.html",
+    "items": []
   }
 ]
