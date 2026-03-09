@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "linkedin-post", "runs": [{"id": "eval-0-tarjetas-post-with_skill", "prompt": "Genera un post de LinkedIn para este proyecto: posts/tarjetas-suavizamiento/suavizamiento.ipynb", "eval_id": 0, "outputs": [{"name": "post.txt", "type": "text", "content": "================================================================================\nLINKEDIN POST \u2014 FULL VERSION (250 words)\n================================================================================\n\nCard payment volumes in Mexico show a consistent weekly rhythm: operations dip on Mondays and Tuesdays, then peak on Fridays and Saturdays. But isolating that seasonal pattern from the underlying growth trend isn't trivial.\n\nOver the past three years, I analyzed debit and credit card payment data from Banco de M\u00e9xico using four statistical techniques\u2014moving average, Holt-Winters exponential smoothing, STL decomposition, and Dynamic Linear Models\u2014to uncover the true trajectory beneath the noise.\n\nThe approach was straightforward: fetch time series from the SIE API using R, then apply each method to segment the signal into trend, seasonality, and remainder components. Each technique offered different trade-offs. Moving averages are simple but lose boundary data. Holt-Winters adapts to level shifts but can overfit. STL provides robust, interpretable decomposition. DLM offers the most flexibility\u2014a full probabilistic framework with Kalman filtering that enables real-time updating and uncertainty quantification.\n\nThe finding: both debit and credit operations exhibit a strong upward trend from January 2023 through December 2025, with zero structural breaks. The seasonal component is stable and additive (lower on weekends), and outliers are minimal. For practitioners at central banks or payments processors, STL wins for clean reporting, while DLM is ideal when probabilistic uncertainty matters.\n\nThis isn't just methodology\u2014it's how you track financial system health in real time.\n\nFull analysis with code and visualizations on my site.\n\n#TimeSeries #PaymentSystems #DataScience #BancoDesMexico #FinancialData\n\n\n================================================================================\nLINKEDIN POST \u2014 SHORT VERSION (75 words)\n================================================================================\n\nWhat's the real trend in card payment volumes? I analyzed three years of Banco de M\u00e9xico debit and credit card data using four smoothing techniques\u2014moving average, Holt-Winters, STL, and Kalman filters.\n\nAll methods converge on the same insight: payments grow consistently with a stable weekly seasonal pattern and no structural breaks. For central banks and fintech, separating signal from noise is everything.\n\n#TimeSeries #PaymentSystems #DataScience #FinancialData #R\n\n\n================================================================================\n"}], "grading": {"run_id": "eval-0-tarjetas-post-with_skill", "expectations": [{"text": "post_in_english: El post est\u00e1 en ingl\u00e9s (archivo viene de posts/)", "passed": true, "evidence": "Post entirely in English starting with 'Card payment volumes in Mexico show a consistent weekly rhythm'"}, {"text": "has_hook: Primera l\u00ednea no empieza con 'In this post', 'Today I want to' ni frases gen\u00e9ricas", "passed": true, "evidence": "Opens with 'Card payment volumes in Mexico show a consistent weekly rhythm: operations dip on Mondays and Tuesdays, then peak on Fridays and Saturdays' - specific and engaging"}, {"text": "has_short_variant: Incluye variante corta (50-80 palabras)", "passed": true, "evidence": "Short version clearly labeled with 75 words, starting with 'What's the real trend in card payment volumes?'"}, {"text": "mentions_banxico_or_mexico: Menciona Banco de M\u00e9xico o M\u00e9xico como contexto real", "passed": true, "evidence": "Mentions 'Banco de M\u00e9xico' explicitly in both full and short versions: 'three years of Banco de M\u00e9xico debit and credit card data'"}, {"text": "has_hashtags: Incluye hashtags relevantes (m\u00e1ximo 5)", "passed": true, "evidence": "5 hashtags: #TimeSeries #PaymentSystems #DataScience #BancoDesMexico #FinancialData in short version, more in full version"}]}}, {"id": "eval-0-tarjetas-post-without_skill", "prompt": "Genera un post de LinkedIn para este proyecto: posts/tarjetas-suavizamiento/suavizamiento.ipynb", "eval_id": 0, "outputs": [{"name": "post.txt", "type": "text", "content": "\ud83d\ude80 Time Series Smoothing: Decoding Card Payment Trends in Mexico\n\nOver the past years, I've been analyzing payment infrastructure data at Banco de M\u00e9xico, specifically focusing on credit and debit card operations at point-of-sale terminals. Today, I'm sharing a deep dive into smoothing techniques that reveal the underlying patterns in these high-frequency transactions.\n\nThe challenge? Raw daily payment data is inherently noisy, with strong weekly seasonality (lower activity on weekends) obscuring the true trend. To address this, I compared four statistical approaches:\n\n\ud83d\udcca **Moving Average** \u2014 The foundation: a simple 7-day centered window that eliminates the weekly noise while maintaining interpretability.\n\n\ud83d\udcc8 **Holt-Winters Exponential Smoothing** \u2014 Adaptive weighting: recent observations matter more, capturing both trend shifts and changing seasonality patterns. The model automatically tunes three smoothing parameters (\u03b1, \u03b2, \u03b3) from the data itself.\n\n\ud83d\udd0d **STL Decomposition** \u2014 Interpretable insights: using LOESS regression, I decomposed the series into trend, seasonal, and remainder (anomalies) components. This method is robust to outliers and ideal for policy reporting.\n\n\ud83c\udfaf **Dynamic Linear Models (Kalman Filter)** \u2014 The most flexible approach: a state-space model that estimates latent trends, slopes, and seasonal harmonics through maximum-likelihood estimation. The Kalman smoother then refines estimates using the full historical dataset.\n\n**Key Findings:**\n\u2705 Both debit and credit card operations show a consistent upward trend from 2023\u20132025\n\u2705 Weekly seasonality is stable and predictable\n\u2705 No structural breaks detected in the remainder components\n\u2705 DLM and STL provide the cleanest trend estimates for monitoring and forecasting\n\n**The Verdict:** For real-time decision-making at a central bank, STL provides transparent decomposition for policy communication, while DLM is preferred when probabilistic uncertainty quantification is essential.\n\nThis analysis combines economic domain expertise with modern time series techniques\u2014exactly the intersection where data science creates value in financial markets and payment systems.\n\nThe full notebook (with code in R, data from Banco de M\u00e9xico's SIE API, and detailed visualizations) is available on my website.\n\n#TimeSeries #DataScience #Economics #BancoDeMetico #Payments #DataAnalytics #FinancialData #R #Econometrics"}], "grading": {"run_id": "eval-0-tarjetas-post-without_skill", "expectations": [{"text": "post_in_english: El post est\u00e1 en ingl\u00e9s (archivo viene de posts/)", "passed": true, "evidence": "Post entirely in English"}, {"text": "has_hook: Primera l\u00ednea no empieza con 'In this post', 'Today I want to' ni frases gen\u00e9ricas", "passed": true, "evidence": "Opens with '\ud83d\ude80 Time Series Smoothing: Decoding Card Payment Trends in Mexico' - specific title with emoji"}, {"text": "has_short_variant: Incluye variante corta (50-80 palabras)", "passed": false, "evidence": "No short variant included; output contains only a single long-form post without an explicit 50-80 word alternative"}, {"text": "mentions_banxico_or_mexico: Menciona Banco de M\u00e9xico o M\u00e9xico como contexto real", "passed": true, "evidence": "Mentions 'Banco de M\u00e9xico' explicitly: 'analyzing payment infrastructure data at Banco de M\u00e9xico, specifically focusing on credit and debit card operations'"}, {"text": "has_hashtags: Incluye hashtags relevantes (m\u00e1ximo 5)", "passed": false, "evidence": "Contains 8 hashtags, exceeding maximum of 5: #TimeSeries #DataScience #Economics #BancoDeMetico #Payments #DataAnalytics #FinancialData #R #Econometrics"}]}}, {"id": "eval-1-tarjetas-casual-with_skill", "prompt": "Quiero publicar en LinkedIn mi an\u00e1lisis de suavizamiento de tarjetas. Est\u00e1 en posts/tarjetas-suavizamiento/suavizamiento.ipynb. Genera el post.", "eval_id": 1, "outputs": [{"name": "post.txt", "type": "text", "content": "When does removing noise from data actually reveal the story?\n\nI recently analyzed 3 years of Mexican credit and debit card transaction volumes from Banco de M\u00e9xico. The raw data is noisy\u2014operations spike on paydays, drop on weekends\u2014but that noise masks the real trend.\n\nSo I applied four different time series smoothing techniques (moving average, Holt-Winters exponential smoothing, STL decomposition, and dynamic linear models) to separate signal from seasonal chatter. All four converged on the same conclusion: card payments show a consistent upward trend over 2023\u20132025, with a stable weekly pattern that's practically clockwork.\n\nWhat surprised me most? The methods differ in flexibility and assumptions, but the economic truth they reveal is the same. In my notebook, I compare each approach\u2014trade-offs between simplicity, robustness, and interpretability\u2014and explain why STL and DLM are the gold standards for monitoring payment systems in real time.\n\nThis kind of decomposition work is foundational for any economist or data scientist tracking financial infrastructure. If you work with payment flows, credit trends, or time series analysis, this might be useful.\n\nRead the full analysis with code, visualizations, and detailed comparisons on my website.\n\n#TimeSeries #R #PaymentSystems #DataAnalysis #Economics #FinancialInclusion\n\n\n---\n\nSHORTER VERSION (80 words):\n\nFour time series smoothing techniques. One clear story.\n\nI analyzed 3 years of Mexican credit and debit card operations using moving average, Holt-Winters, STL, and dynamic linear models. All four methods converged on the same finding: consistent upward trend, stable weekly seasonality, no anomalies.\n\nDifferent technical approaches, same economic truth. Check the full analysis on my website to see which method works best for payment monitoring.\n\n#TimeSeries #R #DataAnalysis #Economics"}], "grading": {"run_id": "eval-1-tarjetas-casual-with_skill", "expectations": [{"text": "post_in_english: El post est\u00e1 en ingl\u00e9s (archivo viene de posts/)", "passed": true, "evidence": "Post entirely in English"}, {"text": "not_generic_opener: No abre con frase gen\u00e9rica como 'Hoy quiero compartir' o 'En este post'", "passed": true, "evidence": "Opens with 'When does removing noise from data actually reveal the story?' - rhetorical question, engaging and specific"}, {"text": "mentions_technique: Menciona al menos una t\u00e9cnica (Moving Average, Holt-Winters, STL, DLM)", "passed": true, "evidence": "Mentions all four: 'moving average, Holt-Winters exponential smoothing, STL decomposition, and dynamic linear models'"}, {"text": "has_cta: Incluye llamada a la acci\u00f3n para leer el an\u00e1lisis completo", "passed": true, "evidence": "Clear CTA: 'Read the full analysis with code, visualizations, and detailed comparisons on my website'"}]}}, {"id": "eval-1-tarjetas-casual-without_skill", "prompt": "Quiero publicar en LinkedIn mi an\u00e1lisis de suavizamiento de tarjetas. Est\u00e1 en posts/tarjetas-suavizamiento/suavizamiento.ipynb. Genera el post.", "eval_id": 1, "outputs": [{"name": "post.txt", "type": "text", "content": "\ud83d\udcca Suavizamiento de operaciones con tarjetas de cr\u00e9dito: M\u00e1s all\u00e1 del ruido\n\nEn Banco de M\u00e9xico, monitorear las tendencias de pagos con tarjetas es fundamental para entender la salud del sistema financiero y la confianza de los consumidores. Sin embargo, los datos crudos de operaciones diarias esconden mucho ruido: patrones semanales, d\u00edas festivos y fluctuaciones irregulares que oscurecen la tendencia subyacente.\n\nPara destilar la se\u00f1al del ruido, apliqu\u00e9 cuatro t\u00e9cnicas de suavizamiento de series de tiempo a tres a\u00f1os de datos (2023-2025) de operaciones con tarjetas de cr\u00e9dito y d\u00e9bito:\n\n\ud83d\udd27 **M\u00e9todos comparados:**\n\n1\ufe0f\u20e3 **Promedio m\u00f3vil** \u2014 Simple e interpretable, pero pierde observaciones en los extremos. Una ventana de 7 d\u00edas elimina el patr\u00f3n semanal efectivamente.\n\n2\ufe0f\u20e3 **Suavizamiento exponencial (Holt-Winters)** \u2014 Asigna mayor peso a observaciones recientes y captura tanto tendencia como estacionalidad. Adaptativo ante cambios de nivel.\n\n3\ufe0f\u20e3 **Descomposici\u00f3n STL** \u2014 Separa la serie en componentes interpretables (tendencia, estacionalidad, residuos). Robusto a valores at\u00edpicos; ideal para reportes anal\u00edticos.\n\n4\ufe0f\u20e3 **Modelo Din\u00e1mico Lineal (DLM)** \u2014 El enfoque m\u00e1s flexible: modelado probabil\u00edstico con filtro de Kalman. Produce estimaciones suaves sin p\u00e9rdida de informaci\u00f3n en bordes. Esencial cuando se requiere incertidumbre cuantificada.\n\n\ud83d\udcc8 **Hallazgos:**\n\n\u2713 Tendencia consistentemente **alcista** en ambas operaciones (cr\u00e9dito y d\u00e9bito) durante 2023-2025\n\u2713 Patr\u00f3n semanal robusto: vol\u00famenes menores los lunes-martes; picos viernes-s\u00e1bado\n\u2713 Sin quiebres estructurales significativos en los residuos\n\u2713 M\u00e9todos STL y DLM convergen en un diagn\u00f3stico confiable del comportamiento de pagos\n\n\ud83c\udfaf **Conclusi\u00f3n:**\n\nPara monitoreo operativo, STL ofrece claridad en la descomposici\u00f3n. Para an\u00e1lisis probabil\u00edsticos o actualizaci\u00f3n secuencial en tiempo real, DLM es la opci\u00f3n superior. Ambas superan al promedio m\u00f3vil y Holt-Winters en robustez y flexibilidad.\n\nEl an\u00e1lisis t\u00e9cnico completo est\u00e1 disponible en mi sitio: [enlace al art\u00edculo]\n\n\u00bfUsas t\u00e9cnicas de suavizamiento en tus proyectos de an\u00e1lisis? \u00bfCu\u00e1l prefieres y por qu\u00e9? Estar\u00e9 encantado de dialogar sobre m\u00e9todos y aplicaciones en finanzas.\n\n#TimeSeries #DataScience #Economics #Fintech #R #Finanzas #DatosEcon\u00f3micos #BancodeM\u00e9xico\n"}], "grading": {"run_id": "eval-1-tarjetas-casual-without_skill", "expectations": [{"text": "post_in_english: El post est\u00e1 en ingl\u00e9s (archivo viene de posts/)", "passed": false, "evidence": "Post is in Spanish (archivo comes from notes/, not posts/), starts with '\ud83d\udcca Suavizamiento de operaciones con tarjetas de cr\u00e9dito'"}, {"text": "not_generic_opener: No abre con frase gen\u00e9rica como 'Hoy quiero compartir' o 'En este post'", "passed": true, "evidence": "Title '\ud83d\udcca Suavizamiento de operaciones con tarjetas de cr\u00e9dito: M\u00e1s all\u00e1 del ruido' is specific and not generic"}, {"text": "mentions_technique: Menciona al menos una t\u00e9cnica (Moving Average, Holt-Winters, STL, DLM)", "passed": true, "evidence": "Mentions all four: 'Promedio m\u00f3vil, Suavizamiento exponencial (Holt-Winters), Descomposici\u00f3n STL, Modelo Din\u00e1mico Lineal (DLM)'"}, {"text": "has_cta: Incluye llamada a la acci\u00f3n para leer el an\u00e1lisis completo", "passed": true, "evidence": "CTA present: '\u00bfUsas t\u00e9cnicas de suavizamiento en tus proyectos de an\u00e1lisis? \u00bfCu\u00e1l prefieres y por qu\u00e9? Estar\u00e9 encantado de dialogar'"}]}}, {"id": "eval-2-notes-spanish-with_skill", "prompt": "Crea un post de LinkedIn para el archivo notes/causal-inference/chapter1.qmd sobre el marco de Rubin", "eval_id": 2, "outputs": [{"name": "post.txt", "type": "text", "content": "\u00bfQu\u00e9 habr\u00eda pasado si hubieras tomado una decisi\u00f3n diferente? Los economistas llamamos a eso \"resultados potenciales\" \u2014 y es la clave para entender causa y efecto.\n\nAcabo de publicar una nota sobre el marco de resultados potenciales de Rubin, el fundamento te\u00f3rico de la inferencia causal moderna. Es una pregunta que aparece constantemente en mi trabajo: cuando observamos que un programa de pol\u00edtica p\u00fablica tiene un efecto, \u00bfrealmente fue el programa o fue algo m\u00e1s?\n\nEl marco de Rubin responde esto con una idea elegante pero poderosa: para cada unidad (persona, empresa, regi\u00f3n), existen dos mundos paralelos \u2014 uno donde ocurre el tratamiento y otro donde no. La diferencia entre ellos es el efecto causal. El desaf\u00edo pr\u00e1ctico es que solo observamos un resultado, nunca ambos.\n\nEn la nota muestro c\u00f3mo implementar este marco en Python: generamos datos sint\u00e9ticos que reproducen el problema fundamental de la inferencia causal, y luego exploramos c\u00f3mo diferentes m\u00e9todos (matching, propensity scores, diferencias en diferencias) nos ayudan a estimar el efecto cuando los mundos paralelos no son observables. Los ejemplos son directos y reproducibles.\n\nEste es el tipo de t\u00e9cnica que uso constantemente analizando mercados de pagos e inclusi\u00f3n financiera en Banco de M\u00e9xico. Entender la causalidad \u2014 no solo correlaci\u00f3n \u2014 es lo que diferencia un an\u00e1lisis descriptivo de uno que realmente informa la pol\u00edtica p\u00fablica.\n\nSi trabajas con datos y necesitas separar causa de efecto, te invito a leer la nota completa. Est\u00e1 disponible en mi sitio.\n\n#InferenciaCausal #DataScience #Python #Econom\u00eda #Econometr\u00cda"}], "grading": {"run_id": "eval-2-notes-spanish-with_skill", "expectations": [{"text": "post_in_spanish: El post est\u00e1 en espa\u00f1ol (archivo viene de notes/)", "passed": true, "evidence": "Post entirely in Spanish, starting with '\u00bfQu\u00e9 habr\u00eda pasado si hubieras tomado una decisi\u00f3n diferente?'"}, {"text": "mentions_rubin_or_causal: Menciona inferencia causal, marco de Rubin o resultados potenciales", "passed": true, "evidence": "Explicitly mentions: 'Marco de resultados potenciales de Rubin', 'inferencia causal moderna', 'resultados potenciales'"}, {"text": "not_generic_opener: No abre con frase gen\u00e9rica", "passed": true, "evidence": "Opens with engaging philosophical question '\u00bfQu\u00e9 habr\u00eda pasado si hubieras tomado una decisi\u00f3n diferente?' - not generic"}, {"text": "appropriate_length: Post principal entre 150-250 palabras", "passed": true, "evidence": "Post appears to be approximately 200 words, fitting within the 150-250 word target range"}]}}, {"id": "eval-2-notes-spanish-without_skill", "prompt": "Crea un post de LinkedIn para el archivo notes/causal-inference/chapter1.qmd sobre el marco de Rubin", "eval_id": 2, "outputs": [{"name": "post.txt", "type": "text", "content": "\ud83d\udcca MARCO DE RESULTADOS POTENCIALES: Cuando la estad\u00edstica tradicional no es suficiente\n\nEn mi trabajo como economista, frecuentemente enfrento esta pregunta: \u00bfsi hubiese aplicado una pol\u00edtica distinta, cu\u00e1l hubiera sido el resultado?\n\nEsta pregunta requiere m\u00e1s que correlaci\u00f3n\u2014requiere *causalidad*.\n\nAcabo de profundizar en el Marco de Resultados Potenciales de Rubin (Potential Outcomes Framework), y quiero compartir c\u00f3mo este framework revoluciona la forma en que pensamos sobre la inferencia causal, especialmente en econom\u00eda y pol\u00edticas p\u00fablicas.\n\n\ud83d\udd0d \u00bfCu\u00e1l es la diferencia fundamental?\n\n\u2022 Estad\u00edstica cl\u00e1sica: Mide asociaci\u00f3n (\u00bfc\u00f3mo se mueven X e Y juntas?)\n\u2022 Inferencia causal: Mide causalidad (\u00bfqu\u00e9 pasa a Y si *intervengo* sobre X?)\n\nEl Marco de Resultados Potenciales nos permite formalizar esta pregunta. Para cada unidad (persona, firma, regi\u00f3n), existen dos *resultados potenciales*:\n- Y_i(1): el resultado SI recibe el tratamiento\n- Y_i(0): el resultado SI NO recibe el tratamiento\n\nEl efecto causal individual es simplemente: \u03c4_i = Y_i(1) - Y_i(0)\n\n\ud83c\udfaf El problema fundamental de la causalidad\n\nAqu\u00ed est\u00e1 la paradoja: **nunca podemos observar ambos resultados potenciales simult\u00e1neamente**. Si una unidad recibe el tratamiento, observamos Y_i(1) pero perdemos Y_i(0) (el contrafactual).\n\nLo que s\u00ed podemos estimar es el Efecto Causal Promedio (ATE):\n\u03c4 = \u0232(1) - \u0232(0)\n\nPero esto depende cr\u00edticamente del *mecanismo de asignaci\u00f3n de tratamiento*.\n\n\ud83d\udca1 Un ejemplo de Python que ilustra el problema:\n\nImagina un doctor que asigna tratamientos perfectamente\u2014solo a quienes sabe que se beneficiar\u00e1n. Parece ideal, \u00bfverdad?\n\nNO. Cuando calculamos la diferencia de medias entre tratados y controles, obtenemos un sesgo masivo porque los tratados son inherentemente distintos (tienen resultados potenciales m\u00e1s altos incluso sin tratamiento).\n\nUn doctor que asigna *aleatoriamente* produce estimadores insesgados, aunque tenga varianza mayor.\n\nEste ejemplo fundamental muestra que la asignaci\u00f3n de tratamiento debe ser lo suficientemente aleatoria, o al menos, *independiente de los resultados potenciales*.\n\n\ud83d\udd17 Las dos piedras angulares: SUTVA\n\nEl framework reposa en dos supuestos:\n\n1. **No interferencia**: Lo que le ocurra a una unidad no afecta el resultado de otra\n2. **Consistencia**: El tratamiento est\u00e1 bien definido; sin versiones m\u00faltiples\n\nJuntos forman el SUTVA (Stable Unit Treatment Value Assumption)\u2014las cimientos de cualquier estimaci\u00f3n causal v\u00e1lida.\n\n\ud83c\udfe6 \u00bfPor qu\u00e9 esto importa en mi trabajo?\n\nEn Banco de M\u00e9xico, estos principios gu\u00edan an\u00e1lisis sobre:\n- Impacto de pol\u00edticas de inclusi\u00f3n financiera\n- Efectos de cambios en tasas de inter\u00e9s sobre cr\u00e9ditos\n- Transparencia en productos financieros\n- Comportamiento de pagos y acceso al cr\u00e9dito\n\nSin un framework robusto de causalidad, confundimos correlaci\u00f3n con causa, y terminamos dise\u00f1ando pol\u00edticas sobre arena.\n\n\ud83d\udcda Actualmente profundizo en:\n- Estimadores estratificados y post-estratificaci\u00f3n\n- Inferencia de Neyman para dise\u00f1os experimentales\n- M\u00e9todos para variables de respuesta no observadas (selecci\u00f3n de Heckman)\n\nQuien desee explorar estas ideas con c\u00f3digo en Python, tengo mis notas disponibles.\n\nLa inferencia causal es el puente entre la estad\u00edstica y la pol\u00edtica p\u00fablica que funciona.\n\n#CausalInference #DataScience #Economics #Python #FinancialInclusion #BancoDesMexico #PolicyAnalytics"}], "grading": {"run_id": "eval-2-notes-spanish-without_skill", "expectations": [{"text": "post_in_spanish: El post est\u00e1 en espa\u00f1ol (archivo viene de notes/)", "passed": true, "evidence": "Post entirely in Spanish"}, {"text": "mentions_rubin_or_causal: Menciona inferencia causal, marco de Rubin o resultados potenciales", "passed": true, "evidence": "Extensively mentions: 'Marco de Resultados Potenciales de Rubin', 'inferencia causal', 'resultados potenciales', 'Potential Outcomes Framework'"}, {"text": "not_generic_opener: No abre con frase gen\u00e9rica", "passed": true, "evidence": "Opens with title '\ud83d\udcca MARCO DE RESULTADOS POTENCIALES: Cuando la estad\u00edstica tradicional no es suficiente' - specific and thematic"}, {"text": "appropriate_length: Post principal entre 150-250 palabras", "passed": false, "evidence": "Post significantly exceeds 250 words, appearing to be approximately 350+ words including explanations, examples, and framework details"}]}}], "previous_feedback": {}, "previous_outputs": {}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>
